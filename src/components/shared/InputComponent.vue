@@ -2,6 +2,7 @@
 import { ref, type Ref, defineEmits } from 'vue';
 const props = defineProps({
   placeHolder: String,
+  passwordBox: Boolean,
 });
 
 const inputValue: Ref<string> = ref("");
@@ -10,8 +11,8 @@ const emit = defineEmits<{
 }>();
 </script>
 <template>
-  <input
-    type="text"
+    <input
+    :type="props.passwordBox?'password':'text'"
     v-model="inputValue"
     @input="emit('sendValue', inputValue)"
     class="text-sm w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none

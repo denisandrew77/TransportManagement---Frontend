@@ -3,9 +3,15 @@ import truck from "@/assets/truck.jpg";
 import byExpressLogo from "@/assets/byExpressLogo.png";
 import InputComponent from "../shared/InputComponent.vue";
 import ButtonComponent from "../shared/ButtonComponent.vue";
+import ErrorMessageComponent from "../shared/ErrorMessageComponent.vue";
 import { useUserStore } from "@/stores/user";
+import { useRouter } from "vue-router";
+import { ref } from "vue";
 
 const user = useUserStore();
+const router = useRouter();
+const emptyUserOrPass = ref(false);
+const wrongCredentials = ref(false);
 
 //username and password setters
 const setUserName = (value: string) => {
@@ -13,12 +19,21 @@ const setUserName = (value: string) => {
 }
 const setPassword = (value: string) => {
   user.password = value;
-  console.log(user.password)
 }
 
 const signIn = async () => {
-  console.log("yes")
+  if(user.userName==="" || user.password===""){
+    emptyUserOrPass.value=true;
+  }
   await user.authenticate();
+  console.log(user.loggedIn)
+  if(user.loggedIn){
+    router.push("Dashboard");
+  }else if((user.userName==="" || user.password==="") && user.loggedIn===false ){
+    emptyUserOrPass.value=true;
+  }else if(user.loggedIn===false){
+    wrongCredentials.value=true;
+  }
 }
 
 </script>
@@ -31,6 +46,8 @@ const signIn = async () => {
       <img :src="byExpressLogo" alt="" class="w-55">
       <InputComponent placeHolder="Username" @sendValue="setUserName"/>
       <InputComponent placeHolder="Password" @sendValue="setPassword"/>
+        <ErrorMessageComponent :name="'Please enter username and password'" v-if="emptyUserOrPass"/>
+        <ErrorMessageComponent :name="'Wrong credentials'" v-if="wrongCredentials"/>
       <ButtonComponent :name="'Sign in'" @clicked="signIn"/>
     </div>
   </div>

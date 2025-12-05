@@ -12,14 +12,20 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async authenticate(){
-      api.post("/signIn", {
+      await api.post("/signIn", {
         userName: this.userName,
         password: this.password,
       }).then((response)=>{
-        const token: string = response.data.token;
-        localStorage.setItem("token",token);
-        const decoded: {userName: string, adminRole: boolean} = jwtDecode(token);
-        this.loggedIn = decoded.adminRole;
+        if(response.data==="false"){
+          this.loggedIn=false;
+        }
+        else{
+          const token: string = response.data.token;
+          localStorage.setItem("token",token);
+          const decoded: {userName: string, adminRole: boolean} = jwtDecode(token);
+          this.loggedIn = true;
+          this.admin = decoded.adminRole;
+        }
       });
     },
   }

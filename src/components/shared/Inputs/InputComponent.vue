@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, type Ref, defineEmits } from 'vue';
+import { ref, type Ref } from 'vue';
 const props = defineProps({
   placeHolder: String,
   passwordBox: Boolean,
@@ -16,6 +16,6 @@ const emit = defineEmits<{
     v-model="inputValue"
     @input="emit('sendValue', inputValue)"
     class="text-sm w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none
-          focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+          focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
     :placeholder="props.placeHolder">
 </template>

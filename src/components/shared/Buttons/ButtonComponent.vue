@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const props = defineProps({
   name: String,
+  color: String,
 });
 const emit = defineEmits<{
   (e: "clicked"): void

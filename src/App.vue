@@ -9,6 +9,8 @@ const router = useRouter();
 onMounted(()=>{
   if(!user.loggedIn){
     router.push("/");
+  } else {
+    router.push("/dashboard");
   }
 })
 </script>

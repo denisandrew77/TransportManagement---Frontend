@@ -1,5 +1,6 @@
 import OrdersComponent from '@/components/pages/OrdersComponent.vue'
 import SignInComponent from '@/components/pages/SignInComponent.vue'
+import NewOrderComponent from '@/components/pages/NewOrderComponent.vue';
 import { useUserStore } from '@/stores/user';
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -18,6 +19,14 @@ const router = createRouter({
       path: '/dashboard',
       name: 'Dashboard',
       component: OrdersComponent,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/newOrder',
+      name: 'NewOrder',
+      component: NewOrderComponent,
       meta: {
         requiresAuth: true
       }

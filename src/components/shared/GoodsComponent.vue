@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useOrder } from '@/stores/order'
 
-const tailwindDesign = '!w-1/8 lg:py-3 px-1'
+const tailwindDesign = '!w-1/8 py-3 px-2';
 //const transportQuote = useTransportQuote();
 const list = [
   { name: 'Type' },
@@ -10,6 +10,7 @@ const list = [
   { name: 'Width' },
   { name: 'Height' },
   { name: 'Weight' },
+  { name: 'Stack' },
 ]
 const goodTypes = [{ name: 'Pallets' }, { name: 'Boxes' }]
 function addGood() {
@@ -38,24 +39,25 @@ const transportOrder = useOrder()
       @click="addGood">
       <i class="bi bi-plus-lg text-white !font-extrabold"></i>
     </button>
-    <div class="flex flex-row bg-blue-200 !h-10 pl-4">
-      <div v-for="reference in list" class="lg:py-2 flex justify-between w-96">
-        <div class="text-[15px]">{{ reference.name }}</div>
+    <div class="flex flex-row justify-around bg-blue-200">
+      <div v-for="reference in list" class="lg:py-2 flex">
+        {{ reference.name }}
       </div>
-      <div class="px-2 w-full text-[15px] flex items-center">Stack</div>
+      <div></div>
     </div>
-    <div class="flex flex-row relative ml-2" v-for="good in transportOrder.goods">
+    <div class="flex flex-row justify-evenly relative" v-for="good in transportOrder.goods">
       <el-select :class="tailwindDesign" v-model="good.type">
         <el-option v-for="value in goodTypes" v-bind:key="value.name" :value="value.name">{{
           value.name
-        }}</el-option>
+          }}</el-option>
       </el-select>
       <el-input :class="tailwindDesign" v-model="good.number"></el-input>
       <el-input :class="tailwindDesign" v-model="good.length"></el-input>
       <el-input :class="tailwindDesign" v-model="good.width"></el-input>
       <el-input :class="tailwindDesign" v-model="good.height"></el-input>
       <el-input :class="tailwindDesign" v-model="good.weight"></el-input>
-      <el-checkbox class="top-2 right-5 mx-4 pl-1 ml-15" size="large" v-model="good.stack" />
+      <el-checkbox class="top-2 mx-4 pl-1 ml-10" size="large" v-model="good.stack" />
+      <div class="w-26"></div>
       <button
         class="bg-red-400 hover:bg-red-500 px-2 rounded-full mt-2 lg:absolute lg:right-3 lg:bottom-3 md:absolute md:right-1"
         @click="() => removeGood(transportOrder.goods.indexOf(good))">

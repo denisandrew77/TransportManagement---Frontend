@@ -9,6 +9,28 @@ import GoodsComponent from './GoodsComponent.vue'
 import MediumTitle from './TextPieces/MediumTitle.vue'
 import TextAreaComponent from './Inputs/TextAreaComponent.vue'
 import SmallTitleComponent from './TextPieces/SmallTitleComponent.vue'
+import { useOrder } from '@/stores/order'
+import type { loading } from '@/models/cargo-related/loadingAndDelivery'
+
+const order = useOrder();
+
+const setClient = (value: string) => {
+  order.client = value;
+}
+const setClientRef = (value: string) => {
+  order.clientRefference = value;
+}
+const setLoading = (value: loading) => {
+  order.loading = value;
+}
+const setDelivery = (value: loading) => {
+  order.delivery = value;
+  console.log(order.loading);
+}
+const setObservations = (value: string) => {
+  order.observations = value;
+  console.log(value);
+}
 
 </script>
 <template>
@@ -17,15 +39,15 @@ import SmallTitleComponent from './TextPieces/SmallTitleComponent.vue'
       <div class="flex flex-row gap-6">
         <div class="text-xs pt-2">Order-No</div>
         <div class="flex flex-row items-center gap-2 text-xl font-bold">
-          <div>Client Ref</div>
+          <div>Client</div>
           <div>
-            <InputComponent />
+            <InputComponent @sendValue="setClient" />
           </div>
         </div>
         <div class="flex flex-row items-center gap-2 text-xl font-bold">
           <div>Client Ref</div>
           <div>
-            <InputComponent />
+            <InputComponent @sendValue="setClientRef" />
           </div>
         </div>
       </div>
@@ -49,12 +71,12 @@ import SmallTitleComponent from './TextPieces/SmallTitleComponent.vue'
       </div>
       <div class="flex flex-row gap-3">
         <IndexListComponent />
-        <LoadingDetailsComponent />
-        <LoadingDetailsComponent />
+        <LoadingDetailsComponent @sendValue="setLoading" />
+        <LoadingDetailsComponent @sendValue="setDelivery" />
         <GoodsComponent />
         <div class="flex flex-col">
           <SmallTitleComponent :text="'Observations'" />
-          <TextAreaComponent />
+          <TextAreaComponent @sendValue="setObservations" />
         </div>
       </div>
     </div>

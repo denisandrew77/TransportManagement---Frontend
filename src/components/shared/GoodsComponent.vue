@@ -22,7 +22,7 @@ function addGood() {
     height: 0,
     weight: 0,
     stack: false,
-  })
+  });
 }
 function removeGood(index: number) {
   transportOrder.goods.splice(index, 1)

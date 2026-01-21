@@ -1,12 +1,15 @@
-import type { goods } from "./goods";
-import type { delivery, loading } from "./loadingAndDelivery";
+import type { carrierDetailsForOrder } from './carrier'
+import type { goods } from './goods'
+import type { delivery, loading } from './loadingAndDelivery'
 
-export interface cargoOrder{
-  orderNumber: number,
-  client: string,
-  clientRefference: string,
-  loading: loading,
-  delivery: delivery,
-  goods: goods[],
+export interface cargoOrder {
+  orderNumber: number
+  client: string
+  clientRefference: string
+  loading: loading
+  delivery: delivery
+  goods: goods[]
   observations: string
+  currentCarrier: carrierDetailsForOrder
+  carriers: carrierDetailsForOrder[]
 }

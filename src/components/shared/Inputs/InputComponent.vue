@@ -11,11 +11,7 @@ const emit = defineEmits<{
 }>();
 </script>
 <template>
-    <input
-    :type="props.passwordBox?'password':'text'"
-    v-model="inputValue"
-    @input="emit('sendValue', inputValue)"
-    class="text-sm w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none
+  <input :type="props.passwordBox ? 'password' : 'text'" v-model="inputValue" @input="emit('sendValue', inputValue)" class="text-sm w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none
           focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
     :placeholder="props.placeHolder">
 </template>

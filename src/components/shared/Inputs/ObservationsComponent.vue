@@ -1,26 +1,22 @@
 <script setup lang="ts">
 import SmallBlackTitleComponent from '../TextPieces/SmallBlackTitleComponent.vue'
-import TextAreaComponent from './TextAreaComponent.vue'
-
-const props = defineProps({
-  name: String,
-  redText: String,
-})
-
-const emit = defineEmits<{
-  (e: 'sendValue', value: string): void
+defineProps<{
+  modelValue: string
+  name: string
+  redText?: string
 }>()
 
-const sendValue = (value: string) => {
-  emit('sendValue', value)
-}
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void
+}>()
 </script>
 <template>
   <div class="flex flex-col">
     <div class="flex flex-row gap-2">
-      <SmallBlackTitleComponent :text="props.name" />
-      <SmallBlackTitleComponent :text="props.redText" class="text-red-500" />
+      <SmallBlackTitleComponent :text="name" />
+      <SmallBlackTitleComponent :text="redText" class="text-red-500" />
     </div>
-    <TextAreaComponent @sendValue="sendValue" />
+    <el-input :value="modelValue" @input="emit('update:modelValue', $event.target.value)" style="width: 320px"
+      type="textarea" />
   </div>
 </template>

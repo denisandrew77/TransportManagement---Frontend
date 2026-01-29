@@ -1,11 +1,19 @@
-export interface carrierDetailsForOrder {
-  number: number
-  invoice: string
-  carrierName: string
-  contact: string
-  plateNumber: string
-  driverName: string
-  driverPhone: string
-  additionalInfoForOrder: string
-  additionalInfoForUpdates: string
+export interface carrier {
+  nif: string
+  fiscalName: string
+  orc: string
+  commercialName: string
+  country: string
+  currency: string
+  capital: string
+  registered: string
+  postalCode: string
+  county: string
+  address: string
+  city: string
+  swift: string
+  phone: string
+  bank: string
+  iban: string
+  vatPercentage: number
 }

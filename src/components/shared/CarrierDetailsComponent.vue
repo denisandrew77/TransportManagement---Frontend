@@ -4,9 +4,11 @@ import SizedInputComponent from './Inputs/SizedInputComponent.vue'
 import SmallBlackTitleComponent from './TextPieces/SmallBlackTitleComponent.vue'
 import JobEstimateComponent from './JobEstimateComponent.vue'
 import ObservationsComponent from './Inputs/ObservationsComponent.vue'
+import AddNewCarrierComponent from './Dialogs/AddNewCarrierComponent.vue'
 import { useOrder } from '@/stores/order'
 
 const order = useOrder()
+const newCarrierDialogVisibility = ref(false)
 
 const carrierFiedls = [
   { name: 'Carrier' },
@@ -29,9 +31,6 @@ const showCarrierbyIndex = (index: number) => {
   })
 }
 
-const setInvoiceNumber = (value: string) => {
-  order.currentCarrier.invoice = value
-}
 const setCarrier = (value: string) => {
   order.currentCarrier.carrierName = value
 }
@@ -40,18 +39,6 @@ const setContact = (value: string) => {
 }
 const setPlateNumber = (value: string) => {
   order.currentCarrier.plateNumber = value
-}
-const setDriver = (value: string) => {
-  order.currentCarrier.driverName = value
-}
-const setDriverPhone = (value: string) => {
-  order.currentCarrier.driverPhone = value
-}
-const setAdditionalInfoForOrder = (value: string) => {
-  order.currentCarrier.additionalInfoForOrder = value
-}
-const setAdditionalInfoForUpdates = (value: string) => {
-  order.currentCarrier.additionalInfoForUpdates = value
 }
 </script>
 <template>
@@ -63,7 +50,7 @@ const setAdditionalInfoForUpdates = (value: string) => {
     </div>
     <div class="w-1/10 flex flex-row items-center gap-3 p-2">
       <SmallBlackTitleComponent :text="'Invoice'" />
-      <SizedInputComponent class="w-54" @sendValue="setInvoiceNumber" />
+      <SizedInputComponent class="w-54" v-model="order.currentCarrier.invoice" />
     </div>
   </div>
   <div class="bg-gray-200 mx-4 flex flex-row pt-5 pl-3">
@@ -72,7 +59,7 @@ const setAdditionalInfoForUpdates = (value: string) => {
         {{ element.name }}
       </div>
     </div>
-    <div class="w-60 gap-4 px-2 mt-4 flex flex-col">
+    <div class="w-70 gap-4 px-2 mt-4 flex flex-col">
       <el-select filterable @change="setCarrier" v-model="order.currentCarrier.carrierName">
         <el-option v-for="value in carrierSelectedOptions.carrier.options" :key="value.name" :value="value.name"
           :label="value.name">
@@ -91,15 +78,31 @@ const setAdditionalInfoForUpdates = (value: string) => {
         </el-option>
       </el-select>
 
-      <SizedInputComponent @sendValue="setDriver" />
-      <SizedInputComponent @sendValue="setDriverPhone" />
+      <SizedInputComponent v-model="order.currentCarrier.driverName" />
+      <SizedInputComponent v-model="order.currentCarrier.driverPhone" />
+    </div>
+    <div class="flex flex-col mt-4 gap-14 ml-3">
+      <button @click="newCarrierDialogVisibility = true"
+        class="px-2.5 py-1.5 rounded-full bg-blue-400 active:bg-blue-600">
+        <i class="bi bi-plus-lg text-white !font-extrabold"></i>
+      </button>
+      <button class="px-2.5 py-1.5 rounded-full bg-blue-400 active:bg-blue-600">
+        <i class="bi bi-plus-lg text-white !font-extrabold"></i>
+      </button>
     </div>
     <JobEstimateComponent class="mb-10 ml-20" />
     <div class="flex flex-row gap-4 ml-8">
       <ObservationsComponent :name="'Additional Information'" :redText="'show in Order'"
-        @sendValue="setAdditionalInfoForOrder" />
+        v-model="order.currentCarrier.additionalInfoForOrder" />
       <ObservationsComponent :name="'Additional Information'" :redText="'show in UPDATES'"
-        @sendValue="setAdditionalInfoForUpdates" />
+        v-model="order.currentCarrier.additionalInfoForUpdates" />
     </div>
   </div>
+  <el-dialog v-model="newCarrierDialogVisibility">
+    <div class="flex flex-row items-center justify-between">
+      <span class="font-extrabold text-3xl text-blue-800 p-3">Add New Carrier</span>
+      <el-button type="primary">Validate Vat Code</el-button>
+    </div>
+    <AddNewCarrierComponent />
+  </el-dialog>
 </template>

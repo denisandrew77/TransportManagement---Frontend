@@ -1,4 +1,4 @@
-import type { carrierDetailsForOrder } from './carrier'
+import type { carrierDetailsForOrder } from './carrierForOrder'
 import type { goods } from './goods'
 import type { delivery, loading } from './loadingAndDelivery'
 

@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue';
-const props = defineProps({
-  placeHolder: String,
-  passwordBox: Boolean,
-});
+defineProps<{
+  modelValue: string
+  placeHolder: string
+  passwordBox?: boolean
+}>()
 
-const inputValue: Ref<string> = ref("");
 const emit = defineEmits<{
-  (e: "sendValue", value: string): void
-}>();
+  (e: 'update:modelValue', value: string): void
+}>()
 </script>
 <template>
-  <input :type="props.passwordBox ? 'password' : 'text'" v-model="inputValue" @input="emit('sendValue', inputValue)" class="text-sm w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none
-          focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
-    :placeholder="props.placeHolder">
+  <input :type="passwordBox ? 'password' : 'text'" :value="modelValue"
+    @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+    class="text-sm w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
+    :placeholder="placeHolder" />
 </template>

@@ -1,89 +1,70 @@
 <script setup lang="ts">
-import SizedInputComponent from '../Inputs/SizedInputComponent.vue';
-import DateInputComponent from '../Inputs/DateInputComponent.vue';
-import TimeInputComponent from '../Inputs/TimeInputComponent.vue';
-import { ref, type Ref } from 'vue';
-import type { loading } from '@/models/cargo-related/loadingAndDelivery';
+import SizedInputComponent from '../Inputs/SizedInputComponent.vue'
+import DateInputComponent from '../Inputs/DateInputComponent.vue'
+import TimeInputComponent from '../Inputs/TimeInputComponent.vue'
+import type { loading } from '@/models/cargo-related/loadingAndDelivery'
 
-const orderDetails: Ref<loading> = ref({
-  name: "",
-  address: "",
-  postalCode: "",
-  city: "",
-  country: "",
-  refferences: "",
-  contacts: "",
-  date: new Date(),
-  time: "",
-});
+const props = defineProps<{
+  modelValue: loading
+}>()
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: loading): void
+}>()
 
 const setName = (value: string) => {
-  orderDetails.value.name = value;
-  emit('sendValue', orderDetails.value);
-};
+  emit('update:modelValue', { ...props.modelValue, name: value })
+}
 
 const setAddress = (value: string) => {
-  orderDetails.value.address = value;
-  emit('sendValue', orderDetails.value);
-};
+  emit('update:modelValue', { ...props.modelValue, address: value })
+}
 
 const setPostalCode = (value: string) => {
-  orderDetails.value.postalCode = value;
-  emit('sendValue', orderDetails.value);
-};
+  emit('update:modelValue', { ...props.modelValue, postalCode: value })
+}
 
 const setCity = (value: string) => {
-  orderDetails.value.city = value;
-  emit('sendValue', orderDetails.value);
-};
+  emit('update:modelValue', { ...props.modelValue, city: value })
+}
 
 const setCountry = (value: string) => {
-  orderDetails.value.country = value;
-  emit('sendValue', orderDetails.value);
-};
+  emit('update:modelValue', { ...props.modelValue, country: value })
+}
 
 const setReference = (value: string) => {
-  orderDetails.value.refferences = value;
-  emit('sendValue', orderDetails.value);
-};
+  emit('update:modelValue', { ...props.modelValue, refferences: value })
+}
 
 const setContact = (value: string) => {
-  orderDetails.value.contacts = value;
-  emit('sendValue', orderDetails.value);
-};
+  emit('update:modelValue', { ...props.modelValue, contacts: value })
+}
 
-const setDate = (value: Date) => {
-  orderDetails.value.date = value;
-  emit('sendValue', orderDetails.value);
-};
+const setDate = (value: string) => {
+  emit('update:modelValue', { ...props.modelValue, date: value })
+}
 
 const setTime = (value: string) => {
-  orderDetails.value.time = value;
-  emit('sendValue', orderDetails.value);
-};
-
-//loading and delivery types are the same so they can be used interchangeably
-const emit = defineEmits<{
-  (e: "sendValue", value: loading): void
-}>();
+  emit('update:modelValue', { ...props.modelValue, time: value })
+}
 </script>
 <template>
   <div class="flex flex-col gap-2 w-70">
-    <SizedInputComponent @sendValue="setName" />
-    <SizedInputComponent @sendValue="setAddress" />
+    <SizedInputComponent :modelValue="modelValue.name" @sendValue="setName" />
+    <SizedInputComponent :modelValue="modelValue.address" @sendValue="setAddress" />
     <div class="flex flex-row gap-2">
-      <SizedInputComponent @sendValue="setPostalCode" class="w-25" />
-      <SizedInputComponent @sendValue="setCity" class="w-43" />
+      <SizedInputComponent :modelValue="modelValue.postalCode" @sendValue="setPostalCode" class="w-25" />
+      <SizedInputComponent :modelValue="modelValue.city" @sendValue="setCity" class="w-43" />
     </div>
     <div class="flex flex-row gap-2">
-      <SizedInputComponent @sendValue="setCountry" class="w-20" />
+      <SizedInputComponent :modelValue="modelValue.country" @sendValue="setCountry" class="w-20" />
       <div>Refs</div>
-      <SizedInputComponent @sendValue="setReference" class="w-38" />
+      <SizedInputComponent :modelValue="modelValue.refferences" @sendValue="setReference" class="w-38" />
     </div>
-    <SizedInputComponent @sendValue="setContact" />
+    <SizedInputComponent :modelValue="modelValue.contacts" @sendValue="setContact" />
     <div class="flex flex-row gap-2">
-      <DateInputComponent @sendValue="setDate" class="w-44" />
-      <TimeInputComponent @sendValue="setTime" class="w-23" />
+      <DateInputComponent :modelValue="modelValue.date" @sendValue="setDate" class="w-44" />
+      <TimeInputComponent :modelValue="modelValue.time" @sendValue="setTime" class="w-23" />
     </div>
   </div>
 </template>

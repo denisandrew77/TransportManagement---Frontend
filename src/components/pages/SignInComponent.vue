@@ -13,14 +13,6 @@ const router = useRouter()
 const emptyUserOrPass = ref(false)
 const wrongCredentials = ref(false)
 
-//username and password setters
-const setUserName = (value: string) => {
-  user.userName = value
-}
-const setPassword = (value: string) => {
-  user.password = value
-}
-
 const signIn = async () => {
   if (user.userName === '' || user.password === '') {
     emptyUserOrPass.value = true
@@ -38,14 +30,12 @@ const signIn = async () => {
 </script>
 
 <template>
-  <div
-    :style="{ backgroundImage: `url(${truck})` }"
-    class="min-h-screen w-full bg-center bg-cover flex justify-center items-center"
-  >
+  <div :style="{ backgroundImage: `url(${truck})` }"
+    class="min-h-screen w-full bg-center bg-cover flex justify-center items-center">
     <div class="flex flex-col items-center justify-center gap-5 bg-white w-2xs rounded-2xl p-7">
       <img :src="byExpressLogo" alt="" class="w-55" />
-      <InputComponent placeHolder="Username" @sendValue="setUserName" />
-      <InputComponent placeHolder="Password" @sendValue="setPassword" @keyup.enter="signIn" />
+      <InputComponent placeHolder="Username" v-model="user.userName" />
+      <InputComponent placeHolder="Password" v-model="user.password" @keyup.enter="signIn" />
       <ErrorMessageComponent :name="'Please enter username and password'" v-if="emptyUserOrPass" />
       <ErrorMessageComponent :name="'Wrong credentials'" v-if="wrongCredentials" />
       <ButtonComponent :name="'Sign in'" @clicked="signIn" />

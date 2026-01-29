@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue'
-const inputValue: Ref<string> = ref('')
+defineProps<{
+  modelValue: string
+}>()
 const emit = defineEmits<{
-  (e: 'sendValue', value: string): void
+  (e: 'update:modelValue', value: string): void
 }>()
 </script>
 <template>
-  <input v-model="inputValue" @input="emit('sendValue', inputValue)" type="text"
+  <input :value="modelValue" @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)" type="text"
     class="bg-white px-4 py-1 rounded-sm focus:outline-none focus:ring-0" />
 </template>

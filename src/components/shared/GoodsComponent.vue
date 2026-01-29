@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useOrder } from '@/stores/order'
 
-const tailwindDesign = '!w-1/8 py-3 px-2';
+const tailwindDesign = '!w-1/8 py-3 px-2'
 //const transportQuote = useTransportQuote();
 const list = [
   { name: 'Type' },
@@ -22,10 +22,12 @@ function addGood() {
     height: 0,
     weight: 0,
     stack: false,
-  });
+  })
 }
 function removeGood(index: number) {
-  transportOrder.goods.splice(index, 1)
+  if (transportOrder.goods.length > 1) {
+    transportOrder.goods.splice(index, 1)
+  }
 }
 
 const transportOrder = useOrder()

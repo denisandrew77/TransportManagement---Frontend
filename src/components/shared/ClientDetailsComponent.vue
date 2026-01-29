@@ -7,31 +7,10 @@ import LoadingDetailsComponent from './Client/LoadingDetailsComponent.vue'
 import IndexListComponent from './Client/IndexListComponent.vue'
 import GoodsComponent from './GoodsComponent.vue'
 import MediumTitle from './TextPieces/MediumTitle.vue'
-import TextAreaComponent from './Inputs/TextAreaComponent.vue'
-import SmallTitleComponent from './TextPieces/SmallTitleComponent.vue'
 import { useOrder } from '@/stores/order'
-import type { loading } from '@/models/cargo-related/loadingAndDelivery'
+import ObservationsComponent from './Inputs/ObservationsComponent.vue'
 
-const order = useOrder();
-
-const setClient = (value: string) => {
-  order.client = value;
-}
-const setClientRef = (value: string) => {
-  order.clientRefference = value;
-}
-const setLoading = (value: loading) => {
-  order.loading = value;
-}
-const setDelivery = (value: loading) => {
-  order.delivery = value;
-  console.log(order.loading);
-}
-const setObservations = (value: string) => {
-  order.observations = value;
-  console.log(value);
-}
-
+const order = useOrder()
 </script>
 <template>
   <div class="m-4">
@@ -41,13 +20,13 @@ const setObservations = (value: string) => {
         <div class="flex flex-row items-center gap-2 text-xl font-bold">
           <div>Client</div>
           <div>
-            <InputComponent @sendValue="setClient" />
+            <InputComponent v-model="order.client" :placeHolder="'client name'" />
           </div>
         </div>
         <div class="flex flex-row items-center gap-2 text-xl font-bold">
           <div>Client Ref</div>
           <div>
-            <InputComponent @sendValue="setClientRef" />
+            <InputComponent v-model="order.clientRefference" :placeHolder="'client refference'" />
           </div>
         </div>
       </div>
@@ -71,12 +50,11 @@ const setObservations = (value: string) => {
       </div>
       <div class="flex flex-row gap-3">
         <IndexListComponent />
-        <LoadingDetailsComponent @sendValue="setLoading" />
-        <LoadingDetailsComponent @sendValue="setDelivery" />
+        <LoadingDetailsComponent v-model="order.loading" />
+        <LoadingDetailsComponent v-model="order.delivery" />
         <GoodsComponent />
         <div class="flex flex-col">
-          <SmallTitleComponent :text="'Observations'" />
-          <TextAreaComponent @sendValue="setObservations" />
+          <ObservationsComponent v-model="order.observations" :name="'Observations'" />
         </div>
       </div>
     </div>

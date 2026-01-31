@@ -6,8 +6,10 @@ import JobEstimateComponent from './JobEstimateComponent.vue'
 import ObservationsComponent from './Inputs/ObservationsComponent.vue'
 import AddNewCarrierComponent from './Dialogs/AddNewCarrierComponent.vue'
 import { useOrder } from '@/stores/order'
+import { useCarrierStore } from '@/stores/carrier'
 
 const order = useOrder()
+const carrier = useCarrierStore()
 const newCarrierDialogVisibility = ref(false)
 
 const carrierFiedls = [
@@ -101,7 +103,7 @@ const setPlateNumber = (value: string) => {
   <el-dialog v-model="newCarrierDialogVisibility">
     <div class="flex flex-row items-center justify-between">
       <span class="font-extrabold text-3xl text-blue-800 p-3">Add New Carrier</span>
-      <el-button type="primary">Validate Vat Code</el-button>
+      <el-button @click="carrier.getViesData" type="primary">Validate Vat Code</el-button>
     </div>
     <AddNewCarrierComponent />
   </el-dialog>

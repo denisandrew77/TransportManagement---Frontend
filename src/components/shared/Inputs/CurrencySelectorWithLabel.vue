@@ -1,24 +1,27 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import cc from 'currency-codes'
 
-const props = defineProps({
-  label: String,
-})
+defineProps<{
+  label: string
+  modelValue: string
+}>()
 
-const selectedOption = ref('')
 const currencyList = cc.data.map((currency) => ({
   code: currency.code,
   name: currency.currency,
 }))
 const emit = defineEmits<{
-  (e: 'sendValue', value: string): void
+  (e: 'update:modelValue', value: string): void
 }>()
+
+const handleChange = (value: string) => {
+  emit('update:modelValue', value)
+}
 </script>
 <template>
   <div class="flex flex-col items-start">
-    <span>{{ props.label }}</span>
-    <el-select filterable v-model="selectedOption" @change="emit('sendValue', selectedOption)">
+    <span>{{ label }}</span>
+    <el-select filterable :model-value="modelValue" @change="handleChange">
       <el-option v-for="currency in currencyList" :key="currency.code" :label="`${currency.code} - ${currency.name}`"
         :value="currency.code" />
     </el-select>

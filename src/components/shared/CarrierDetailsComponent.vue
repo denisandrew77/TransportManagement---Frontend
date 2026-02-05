@@ -9,6 +9,7 @@ import { useOrder } from '@/stores/order'
 import { useCarrierStore } from '@/stores/carrier'
 import { useCarriers } from '@/stores/carriers'
 import BigTitle from './TextPieces/BigTitle.vue'
+import { useVehicles } from '@/stores/vehicle'
 
 onMounted(()=>{
   carriers.getCarriers();
@@ -17,6 +18,7 @@ onMounted(()=>{
 const order = useOrder()
 const carrier = useCarrierStore()
 const carriers = useCarriers()
+const vehicles = useVehicles()
 
 const newCarrierDialogVisibility = ref(false)
 
@@ -27,11 +29,6 @@ const carrierFiedls = [
   { name: 'Driver' },
   { name: 'Driver Phone' },
 ]
-//to be replaced by api call soon
-const carrierSelectedOptions = ref({
-  contacts: { value: '', options: [{ name: 'Contact1' }, { name: 'Contact2' }] },
-  plateNumber: { value: '', options: [{ name: 'Plate1' }, { name: 'Plate2' }] },
-})
 
 const showCarrierbyIndex = (index: number) => {
   order.carriers.forEach((carrier) => {
@@ -40,8 +37,12 @@ const showCarrierbyIndex = (index: number) => {
   })
 }
 
-const setCarrier = (value: string) => {
+const setCarrier = async (value: string) => {
   order.currentCarrier.carrierName = value
+  await carrier.getCarrierContacts(value);
+  await vehicles.getCarrierVehicles(value);
+  order.currentCarrier.contact = '';
+  order.currentCarrier.plateNumber = '';
 }
 const setContact = (value: string) => {
   order.currentCarrier.contact = value
@@ -76,14 +77,14 @@ const setPlateNumber = (value: string) => {
       </el-select>
 
       <el-select filterable @change="setContact" v-model="order.currentCarrier.contact">
-        <el-option v-for="value in carrierSelectedOptions.contacts.options" :key="value.name" :value="value.name"
-          :label="value.name">
+        <el-option v-for="contact in carrier.contacts" :key="contact.name" :value="contact.name"
+          :label="contact.name">
         </el-option>
       </el-select>
 
       <el-select filterable @change="setPlateNumber" v-model="order.currentCarrier.plateNumber">
-        <el-option v-for="value in carrierSelectedOptions.plateNumber.options" :key="value.name" :value="value.name"
-          :label="value.name">
+        <el-option v-for="vehicle in vehicles.vehicles" :key="vehicle.plateNumber" :value="vehicle.plateNumber"
+          :label="vehicle.plateNumber">
         </el-option>
       </el-select>
 

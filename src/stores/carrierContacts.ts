@@ -4,6 +4,5 @@ import { defineStore } from "pinia";
 export const useCarrierContacts = defineStore("carrierContacts",{
   state: (): carrierContact[] => ([] as carrierContact[]),
   actions:{
-
   }
 })

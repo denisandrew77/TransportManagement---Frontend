@@ -1,0 +1,29 @@
+export interface vehicle {
+  plateNumber: string
+  driverName: string
+  driverPhoneNumber: string
+  status: string
+  loadWeight: number
+  totalLength: number
+  width: number
+  distanceBetweenWheels: number
+  insideHeight: number
+  totalHeight: number
+  vehicleType: string
+  carrierType: string
+  personalPhoneNumber: string
+  goodsInsurance: string
+  obligateInspection: string
+  weight: number
+  dkvDate: string
+  gesTransDate: string
+  tarifApproachKms: number
+  tarrifLoadKms: number
+  tarifClosingKms: number
+  registrationDate: string
+  totalKilometers: number
+  date: string
+  vehicleInsurance: string
+  tarif: number
+  insideLength: number
+}

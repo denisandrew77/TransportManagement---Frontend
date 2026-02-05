@@ -1,3 +1,5 @@
+import type { carrierContact } from "./carrierContact"
+
 export interface carrier {
   nif: string
   fiscalName: string
@@ -20,5 +22,6 @@ export interface carrier {
     name: string,
     phoneNumber: string,
     email: string
-  }
+  },
+  contacts: carrierContact[],
 }

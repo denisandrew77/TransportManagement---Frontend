@@ -1,4 +1,5 @@
 import type { carrier } from '@/models/cargo-related/carrier'
+import type { carrierContact } from '@/models/cargo-related/carrierContact';
 import { api } from '@/services/api'
 import { defineStore } from 'pinia'
 
@@ -25,7 +26,8 @@ export const useCarrierStore = defineStore('carrier', {
       name: '',
       phoneNumber: '',
       email: ''
-  }
+    },
+    contacts: [] as carrierContact[],
   }),
   actions: {
     async getViesData() {
@@ -87,6 +89,19 @@ export const useCarrierStore = defineStore('carrier', {
           'Authorization': token
         }
       });
-    }
+    },
+    async getCarrierContacts(commercialName: string){
+      const token = localStorage.getItem('token');
+      await api.get("/getCarrierContacts",{
+        params:{
+          carrierName: commercialName
+        },
+        headers:{
+          'Authorization': token
+        }
+      }).then((response)=>{
+          this.contacts = response.data.contacts
+      });
+    },
   },
 })

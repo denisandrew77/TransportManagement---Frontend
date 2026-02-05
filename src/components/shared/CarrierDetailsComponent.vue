@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import SizedInputComponent from './Inputs/SizedInputComponent.vue'
 import SmallBlackTitleComponent from './TextPieces/SmallBlackTitleComponent.vue'
 import JobEstimateComponent from './JobEstimateComponent.vue'
@@ -7,9 +7,17 @@ import ObservationsComponent from './Inputs/ObservationsComponent.vue'
 import AddNewCarrierComponent from './Dialogs/AddNewCarrierComponent.vue'
 import { useOrder } from '@/stores/order'
 import { useCarrierStore } from '@/stores/carrier'
+import { useCarriers } from '@/stores/carriers'
+import BigTitle from './TextPieces/BigTitle.vue'
+
+onMounted(()=>{
+  carriers.getCarriers();
+})
 
 const order = useOrder()
 const carrier = useCarrierStore()
+const carriers = useCarriers()
+
 const newCarrierDialogVisibility = ref(false)
 
 const carrierFiedls = [
@@ -21,7 +29,6 @@ const carrierFiedls = [
 ]
 //to be replaced by api call soon
 const carrierSelectedOptions = ref({
-  carrier: { value: '', options: [{ name: 'Carrier1' }, { name: 'Carrier2' }] },
   contacts: { value: '', options: [{ name: 'Contact1' }, { name: 'Contact2' }] },
   plateNumber: { value: '', options: [{ name: 'Plate1' }, { name: 'Plate2' }] },
 })
@@ -63,8 +70,8 @@ const setPlateNumber = (value: string) => {
     </div>
     <div class="w-70 gap-4 px-2 mt-4 flex flex-col">
       <el-select filterable @change="setCarrier" v-model="order.currentCarrier.carrierName">
-        <el-option v-for="value in carrierSelectedOptions.carrier.options" :key="value.name" :value="value.name"
-          :label="value.name">
+        <el-option v-for="carrier in carriers.carrierList" :key="carrier.commercialName" :value="carrier.commercialName"
+          :label="carrier.commercialName">
         </el-option>
       </el-select>
 
@@ -102,7 +109,7 @@ const setPlateNumber = (value: string) => {
   </div>
   <el-dialog v-model="newCarrierDialogVisibility">
     <div class="flex flex-row items-center justify-between">
-      <span class="font-extrabold text-3xl text-blue-800 p-3">Add New Carrier</span>
+      <BigTitle :text="'Add New Carrier'"/>
       <el-button @click="carrier.getViesData" type="primary">Validate Vat Code</el-button>
     </div>
     <AddNewCarrierComponent />

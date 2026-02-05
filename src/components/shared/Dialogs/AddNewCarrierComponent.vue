@@ -6,6 +6,7 @@ import CurrencySelectorWithLabel from '../Inputs/CurrencySelectorWithLabel.vue'
 import { useCarrierStore } from '@/stores/carrier'
 import NumberInputWithText from '../Inputs/NumberInputWithText.vue'
 import DatePickerComponent from '../Inputs/DatePickerComponent.vue'
+import BigTitle from '../TextPieces/BigTitle.vue'
 
 const carrier = useCarrierStore()
 
@@ -27,11 +28,14 @@ const inputTitleList = ref({
   bank: 'Bank',
   iban: 'IBAN',
   vatPercentage: 'VAT %',
+  contactName: "Name",
+  contactMobilePhone: "Mobile",
+  contactEmail: "Email"
 })
 
 </script>
 <template>
-  <div class="mt-3 grid grid-cols-4 gap-4 relative">
+  <div class="mt-3 grid grid-cols-4 gap-4 relative mb-5">
     <InputWithText :label="inputTitleList.nif" v-model="carrier.nif" />
     <InputWithText :label="inputTitleList.fiscalName" v-model="carrier.fiscalName" />
     <InputWithText :label="inputTitleList.orc" v-model="carrier.orc" />
@@ -49,6 +53,15 @@ const inputTitleList = ref({
     <InputWithText :label="inputTitleList.bank" v-model="carrier.bank" />
     <InputWithText :label="inputTitleList.iban" v-model="carrier.iban" />
     <NumberInputWithText :label="inputTitleList.vatPercentage" v-model="carrier.vatPercentage" />
-      <el-button @click="carrier.createCarrier" type="success" class="absolute right-3 bottom-0" size="large">Save</el-button>
+      <el-button @click="carrier.createCarrier" type="success" class="absolute right-8 bottom-0" size="large">Save</el-button>
+  </div>
+  <div class="mb-4">
+    <BigTitle :text="'Add a new Contact'"/>
+  </div>
+  <div class="grid grid-cols-4 gap-4 relative h-24">
+    <InputWithText :label="inputTitleList.contactName" v-model="carrier.contact.name"/>
+    <InputWithText :label="inputTitleList.contactMobilePhone" v-model="carrier.contact.phoneNumber"/>
+    <InputWithText :label="inputTitleList.contactEmail" v-model="carrier.contact.email"/>
+    <el-button @click="carrier.createCarrierContact" type="success" class="absolute right-8 bottom-0" size="large">Save</el-button>
   </div>
 </template>

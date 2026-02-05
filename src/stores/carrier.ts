@@ -20,7 +20,12 @@ export const useCarrierStore = defineStore('carrier', {
     phone: '',
     bank: '',
     iban: '',
-    vatPercentage: 15,
+    vatPercentage: 0,
+    contact: {
+      name: '',
+      phoneNumber: '',
+      email: ''
+  }
   }),
   actions: {
     async getViesData() {
@@ -66,6 +71,22 @@ export const useCarrierStore = defineStore('carrier', {
       }).then((response)=>{
         console.log(response.data.message);
       })
+    },
+    async createCarrierContact(){
+      const token = localStorage.getItem('token');
+      console.log(this.contact);
+      await api.post("/addCarrierContact",{
+        contact:{
+          name: this.contact.name,
+          mobile: this.contact.phoneNumber,
+          email: this.contact.email
+        },
+        carrierName: this.commercialName
+      },{
+        headers:{
+          'Authorization': token
+        }
+      });
     }
   },
 })

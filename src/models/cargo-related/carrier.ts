@@ -16,4 +16,9 @@ export interface carrier {
   bank: string
   iban: string
   vatPercentage: number
+  contact: {
+    name: string,
+    phoneNumber: string,
+    email: string
+  }
 }

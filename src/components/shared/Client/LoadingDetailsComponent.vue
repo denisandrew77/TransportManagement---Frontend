@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import SizedInputComponent from '../Inputs/SizedInputComponent.vue'
-import DateInputComponent from '../Inputs/DateInputComponent.vue'
 import TimeInputComponent from '../Inputs/TimeInputComponent.vue'
 import type { loading } from '@/models/cargo-related/loadingAndDelivery'
 
@@ -50,21 +49,21 @@ const setTime = (value: string) => {
 </script>
 <template>
   <div class="flex flex-col gap-2 w-70">
-    <SizedInputComponent :modelValue="modelValue.name" @sendValue="setName" />
-    <SizedInputComponent :modelValue="modelValue.address" @sendValue="setAddress" />
+    <SizedInputComponent :modelValue="modelValue.name" @sendValue="setName" class="w-80"/>
+    <SizedInputComponent :modelValue="modelValue.address" @sendValue="setAddress" class="w-80"/>
     <div class="flex flex-row gap-2">
-      <SizedInputComponent :modelValue="modelValue.postalCode" @sendValue="setPostalCode" class="w-25" />
+      <SizedInputComponent :modelValue="modelValue.postalCode" @sendValue="setPostalCode" class="w-35" />
       <SizedInputComponent :modelValue="modelValue.city" @sendValue="setCity" class="w-43" />
     </div>
     <div class="flex flex-row gap-2">
       <SizedInputComponent :modelValue="modelValue.country" @sendValue="setCountry" class="w-20" />
       <div>Refs</div>
-      <SizedInputComponent :modelValue="modelValue.refferences" @sendValue="setReference" class="w-38" />
+      <SizedInputComponent :modelValue="modelValue.refferences" @sendValue="setReference" class="w-48" />
     </div>
-    <SizedInputComponent :modelValue="modelValue.contacts" @sendValue="setContact" />
+    <SizedInputComponent :modelValue="modelValue.contacts" @sendValue="setContact"  class="w-80"/>
     <div class="flex flex-row gap-2">
-      <DateInputComponent :modelValue="modelValue.date" @sendValue="setDate" class="w-44" />
-      <TimeInputComponent :modelValue="modelValue.time" @sendValue="setTime" class="w-23" />
+      <el-date-picker :model-value="modelValue.date" @update:model-value="setDate"/>
+      <TimeInputComponent :modelValue="modelValue.time" @sendValue="setTime" class="w-14" />
     </div>
   </div>
 </template>

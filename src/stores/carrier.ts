@@ -74,16 +74,16 @@ export const useCarrierStore = defineStore('carrier', {
         console.log(response.data.message);
       })
     },
-    async createCarrierContact(){
+    async createCarrierContact(carrier: string){
       const token = localStorage.getItem('token');
-      console.log(this.contact);
+      console.log(carrier);
       await api.post("/addCarrierContact",{
         contact:{
           name: this.contact.name,
           mobile: this.contact.phoneNumber,
           email: this.contact.email
         },
-        carrierName: this.commercialName
+        carrierName: carrier
       },{
         headers:{
           'Authorization': token
@@ -103,5 +103,31 @@ export const useCarrierStore = defineStore('carrier', {
           this.contacts = response.data.contacts
       });
     },
+    resetCarrierFields(){
+      this.nif = '';
+      this.fiscalName = '';
+      this.orc = '';
+      this.commercialName = '';
+      this.country = '';
+      this.currency = '';
+      this.capital = '';
+      this.registered = '';
+      this.postalCode = '';
+      this.county = '';
+      this.address = '';
+      this.city = '';
+      this.swift = '';
+      this.phone = '';
+      this.bank = '';
+      this.iban = '';
+      this.vatPercentage = 0;
+    },
+    resetContactFields(){
+      this.contact = {
+        name: '',
+        phoneNumber: '',
+        email: ''
+      };
+    }
   },
 })

@@ -4,5 +4,5 @@ import CarrierDetailsComponent from '../shared/CarrierDetailsComponent.vue';
 </script>
 <template>
   <ClientDetailsComponent />
-  <CarrierDetailsComponent />
+  <CarrierDetailsComponent/>
 </template>

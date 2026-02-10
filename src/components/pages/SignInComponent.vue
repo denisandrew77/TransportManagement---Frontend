@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import truck from '@/assets/truck.jpg'
-import byExpressLogo from '@/assets/byExpressLogo.png'
+import sigla_denicar from "@/assets/sigla_denicar.jpg";
 import InputComponent from '../shared/Inputs/InputComponent.vue'
 import ButtonComponent from '../shared/Buttons/ButtonComponent.vue'
 import ErrorMessageComponent from '../shared/ErrorMessageComponent.vue'
@@ -33,7 +33,7 @@ const signIn = async () => {
   <div :style="{ backgroundImage: `url(${truck})` }"
     class="min-h-screen w-full bg-center bg-cover flex justify-center items-center">
     <div class="flex flex-col items-center justify-center gap-5 bg-white w-2xs rounded-2xl p-7">
-      <img :src="byExpressLogo" alt="" class="w-55" />
+      <img :src="sigla_denicar" alt="" class="w-55" />
       <InputComponent placeHolder="Username" v-model="user.userName" />
       <InputComponent placeHolder="Password" v-model="user.password" @keyup.enter="signIn" />
       <ErrorMessageComponent :name="'Please enter username and password'" v-if="emptyUserOrPass" />

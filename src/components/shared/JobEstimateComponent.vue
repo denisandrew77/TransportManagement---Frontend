@@ -1,140 +1,63 @@
 <script setup lang="ts">
-import SizedInputComponent from './Inputs/SizedInputComponent.vue'
-import SmallBlackTitleComponent from './TextPieces/SmallBlackTitleComponent.vue'
-import { ref } from 'vue'
-import { useRouteAndPriceDetails } from '@/stores/routeDetails'
+import { useRouteAndPriceDetails } from '@/stores/routeDetails';
+import NumberInput from './Inputs/NumberInput.vue'
+import { onMounted, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+const routeAndPrice = useRouteAndPriceDetails();
+const { carrierPrice, highwaysPrice, waitingPrice, hotelPrice, clientPrice, totalCarrierPrice } = storeToRefs(routeAndPrice);
 
-const routeDetails = useRouteAndPriceDetails()
+onMounted(()=>{
+  routeAndPrice.calculateTotalCarrierPrice();
+  routeAndPrice.calculateProfit();
+});
+watch([carrierPrice, highwaysPrice, waitingPrice, hotelPrice, clientPrice, totalCarrierPrice], ()=>{
+  routeAndPrice.calculateTotalCarrierPrice();
+  routeAndPrice.calculateProfit();
+});
 
-const inputValues = ref({
-  approachKms: '',
-  approachRate: '',
-  approachTotal: '',
-  loadKms: '',
-  loadRate: '',
-  loadTotal: '',
-  closingKms: '',
-  closingRate: '',
-  closingTotal: '',
-  highways: '',
-  waiting: '',
-  hotel: '',
-  total: '',
-  kms: '',
-  transitTime: '',
-})
 
-const setPriceClient = (value: string) => {
-  console.log('setPriceClient called with value:', value)
-  routeDetails.clientPrice = Number(value) || 0
-}
-
-const setPriceCarrier = (value: string) => {
-  console.log('setPriceCarrier called with value:', value)
-  routeDetails.carrierPrice = Number(value) || 0
-}
 </script>
 <template>
-  <div class="mx-4 mt-4 flex flex-row gap-8">
-    <!-- Left side -->
-    <div class="flex flex-col gap-4">
-      <!-- Approach kms -->
-      <div class="flex flex-row items-center gap-3">
-        <div class="w-32">
-          <SmallBlackTitleComponent :text="'Approach kms'" />
+  <div class="p-3 bg-blue-300 rounded-2xl flex flex-col gap-4 justify-center">
+    <div class="font-bold text-white bg-blue-600 py-2 px-6 text-xl rounded-xl w-full text-center">Price Estimation</div>
+    <div class="flex flex-row justify-between gap-6 items-center">
+      <div class="flex flex-col gap-3">
+        <div class="flex flex-row items-center justify-between gap-3">
+          <span>Carrier Price</span>
+          <NumberInput class="w-25" v-model="routeAndPrice.carrierPrice"/>
         </div>
-        <SizedInputComponent v-model="inputValues.approachKms" class="w-40" />
-        <span>x EUR/Km</span>
-        <SizedInputComponent v-model="inputValues.approachRate" class="w-40" />
-        <span>=</span>
-        <SizedInputComponent v-model="inputValues.approachTotal" class="w-40" />
+        <div class="flex flex-row items-center justify-between gap-3">
+          <span>Highways</span>
+          <NumberInput class="w-25" v-model="routeAndPrice.highwaysPrice"/>
+        </div>
+        <div class="flex flex-row items-center justify-between gap-3">
+          <span>Waiting</span>
+          <NumberInput class="w-25" v-model="routeAndPrice.waitingPrice"/>
+        </div>
+        <div class="flex flex-row items-center justify-between gap-3">
+          <span>Hotel</span>
+          <NumberInput class="w-25" v-model="routeAndPrice.hotelPrice"/>
+        </div>
       </div>
-
-      <!-- Load kms -->
-      <div class="flex flex-row items-center gap-3">
-        <div class="w-32">
-          <SmallBlackTitleComponent :text="'Load kms'" />
+      <div  class="flex flex-col gap-3 relative h-full">
+        <div class="flex flex-row items-center justify-between gap-3">
+          <span>Carrier Price</span>
+          <NumberInput class="w-25" v-model="routeAndPrice.totalCarrierPrice"/>
         </div>
-        <SizedInputComponent v-model="inputValues.loadKms" class="w-40" />
-        <span>x EUR/Km</span>
-        <SizedInputComponent v-model="inputValues.loadRate" class="w-40" />
-        <span>=</span>
-        <SizedInputComponent v-model="inputValues.loadTotal" class="w-40" />
-      </div>
-
-      <!-- Closing kms -->
-      <div class="flex flex-row items-center gap-3">
-        <div class="w-32">
-          <SmallBlackTitleComponent :text="'Closing kms'" />
+        <div class="flex flex-row items-center justify-between gap-3">
+          <span>Client Price</span>
+          <NumberInput class="w-25" v-model="routeAndPrice.clientPrice"/>
         </div>
-        <SizedInputComponent v-model="inputValues.closingKms" class="w-40" />
-        <span>x EUR/Km</span>
-        <SizedInputComponent v-model="inputValues.closingRate" class="w-40" />
-        <span>=</span>
-        <SizedInputComponent v-model="inputValues.closingTotal" class="w-40" />
-      </div>
-
-      <!-- Highways -->
-      <div class="flex flex-row items-center gap-3">
-        <div class="w-32">
-          <SmallBlackTitleComponent :text="'Highways'" />
-        </div>
-        <SizedInputComponent v-model="inputValues.highways" class="w-40" />
-      </div>
-
-      <!-- Waiting -->
-      <div class="flex flex-row items-center gap-3">
-        <div class="w-32">
-          <SmallBlackTitleComponent :text="'Waiting'" />
-        </div>
-        <SizedInputComponent v-model="inputValues.waiting" class="w-40" />
-      </div>
-
-      <!-- Hotel -->
-      <div class="flex flex-row items-center gap-3">
-        <div class="w-32">
-          <SmallBlackTitleComponent :text="'Hotel'" />
-        </div>
-        <SizedInputComponent v-model="inputValues.hotel" class="w-40" />
-      </div>
-
-      <!-- Total -->
-      <div class="flex flex-row items-center gap-3 mt-4">
-        <div class="border-2 border-gray-400 rounded px-4 py-2 w-40 text-center">
-          <SmallBlackTitleComponent :text="'Total'" />
-        </div>
-        <SizedInputComponent v-model="inputValues.total" class="w-40" />
       </div>
     </div>
-
-    <!-- Right side -->
-    <div class="bg-blue-300 px-4 rounded shadow-md w-72 flex flex-col justify-evenly">
-      <div class="flex flex-row items-center gap-3">
-        <div class="w-32">
-          <SmallBlackTitleComponent :text="'Price client'" />
-        </div>
-        <SizedInputComponent @sendValue="setPriceClient" class="w-40" />
+    <div class="flex flex-row justify-around">
+      <div class="flex flex-col items-center mt-2">
+          <span class="text-xs">Carrier price</span>
+          <div class="font-bold text-2xl">{{routeAndPrice.totalCarrierPrice}}€</div>
       </div>
-
-      <div class="flex flex-row items-center gap-3">
-        <div class="w-32">
-          <SmallBlackTitleComponent :text="'Price carrier'" />
-        </div>
-        <SizedInputComponent @sendValue="setPriceCarrier" class="w-40" />
-      </div>
-
-      <div class="flex flex-row items-center gap-3">
-        <div class="w-32">
-          <SmallBlackTitleComponent :text="'Kms.'" />
-        </div>
-        <SizedInputComponent v-model="inputValues.kms" class="w-40" />
-      </div>
-
-      <div class="flex flex-row items-center gap-3">
-        <div class="w-32">
-          <SmallBlackTitleComponent :text="'Transit Time (TT)'" />
-        </div>
-        <SizedInputComponent v-model="inputValues.transitTime" class="w-40" />
+      <div class="flex flex-col items-center">
+          <span class="text-xs">Profit</span>
+          <div class=" font-medium text-2xl p-2 bg-green-700 text-white rounded-md">{{routeAndPrice.profit}}€</div>
       </div>
     </div>
   </div>

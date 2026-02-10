@@ -43,15 +43,16 @@ const order = useOrder()
       </div>
     </div>
     <div class="bg-gray-200 p-2 flex flex-col">
-      <div class="flex flex-row justify-between w-160">
-        <div></div>
-        <MediumTitle :text="'Sender'" />
-        <MediumTitle :text="'Receiver'" />
-      </div>
-      <div class="flex flex-row gap-3">
-        <IndexListComponent />
-        <LoadingDetailsComponent v-model="order.loading" />
-        <LoadingDetailsComponent v-model="order.delivery" />
+      <div class="flex flex-row gap-15">
+        <IndexListComponent  class="mt-7"/>
+        <div class="flex flex-col items-center">
+          <MediumTitle :text="'Sender'" />
+          <LoadingDetailsComponent v-model="order.loading" />
+        </div>
+        <div class="flex flex-col items-center">
+          <MediumTitle :text="'Receiver'" />
+          <LoadingDetailsComponent v-model="order.delivery" />
+        </div>
         <GoodsComponent />
         <div class="flex flex-col">
           <ObservationsComponent v-model="order.observations" :name="'Observations'" />

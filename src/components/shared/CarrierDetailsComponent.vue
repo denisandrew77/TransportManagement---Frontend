@@ -5,6 +5,8 @@ import SmallBlackTitleComponent from './TextPieces/SmallBlackTitleComponent.vue'
 import JobEstimateComponent from './JobEstimateComponent.vue'
 import ObservationsComponent from './Inputs/ObservationsComponent.vue'
 import AddNewCarrierComponent from './Dialogs/AddNewCarrierComponent.vue'
+import AddNewPlateComponent from './Dialogs/AddNewPlateComponent.vue'
+import AddNewContactComponent from './Dialogs/AddNewContactComponent.vue'
 import { useOrder } from '@/stores/order'
 import { useCarrierStore } from '@/stores/carrier'
 import { useCarriers } from '@/stores/carriers'
@@ -21,6 +23,8 @@ const carriers = useCarriers()
 const vehicles = useVehicles()
 
 const newCarrierDialogVisibility = ref(false)
+const newPlateDialogVisibility = ref(false)
+const newContactDialogVisibility = ref(false)
 
 const carrierFiedls = [
   { name: 'Carrier' },
@@ -33,6 +37,7 @@ const carrierFiedls = [
 const showCarrierbyIndex = (index: number) => {
   order.carriers.forEach((carrier) => {
     if (carrier.number === index) {
+      order.currentCarrier = carrier;
     }
   })
 }
@@ -45,22 +50,75 @@ const setCarrier = async (value: string) => {
   order.currentCarrier.plateNumber = '';
 }
 const setContact = (value: string) => {
-  order.currentCarrier.contact = value
+  order.currentCarrier.contact = value;
 }
 const setPlateNumber = (value: string) => {
-  order.currentCarrier.plateNumber = value
+  order.currentCarrier.plateNumber = value;
+  order.currentCarrier.driverName = String(vehicles.vehicles.find((vehicle)=>vehicle.plateNumber===value)?.driverName);
+  order.currentCarrier.driverPhone = String(vehicles.vehicles.find((vehicle)=>vehicle.plateNumber===value)?.driverPhoneNumber);
+}
+
+const addCarrier = () => {
+  order.carriers.push({
+    number: order.carriers.length + 1,
+    carrierName: '',
+    contact: '',
+    plateNumber: '',
+    driverName: '',
+    driverPhone: '',
+    additionalInfoForOrder: '',
+    additionalInfoForUpdates: '',
+    invoice: ''
+  });
+  showCarrierbyIndex(order.carriers.length);
+}
+const deleteCarrier = ()=>{
+  const index : number = order.currentCarrier.number;
+  let changed : boolean = false;
+  order.carriers.forEach((carrier)=>{
+    if(carrier.number===index){
+      order.carriers.splice(index-1,1);
+      changed = true;
+    }
+    if(changed===true){
+      carrier.number--;
+    }
+  })
+}
+const contactCreatedRoutine = ()=>{
+  newContactDialogVisibility.value=false;
+  order.currentCarrier.contact = carrier.contact.name;
+  carrier.contact = {
+    name: '',
+    phoneNumber: '',
+    email: ''
+  }
+}
+
+const vehicleCreatedRoutine = ()=>{
+  newPlateDialogVisibility.value=false;
+  order.currentCarrier.plateNumber = vehicles.plateNumber;
+  order.currentCarrier.driverName = vehicles.driverName;
+  order.currentCarrier.driverPhone = vehicles.driverPhoneNumber;
+  vehicles.resetVehicleFields();
 }
 </script>
 <template>
-  <div class="mx-4 mt-4 bg-blue-300 flex flex-row">
-    <div class="flex flex-row" v-for="carrier in order.carriers">
-      <button @click="showCarrierbyIndex(carrier.number)" class="bg-gray-200 w-14 active:bg-gray-300">
+  <div class="mx-4 bg-blue-300 flex flex-row justify-between">
+    <div class="flex flex-row">
+      <div class="flex flex-row" v-for="carrier in order.carriers">
+      <button @click="showCarrierbyIndex(carrier.number)" class="bg-gray-200 w-14 focus:bg-gray-300">
         {{ carrier.number }}
       </button>
     </div>
     <div class="w-1/10 flex flex-row items-center gap-3 p-2">
       <SmallBlackTitleComponent :text="'Invoice'" />
       <SizedInputComponent class="w-54" v-model="order.currentCarrier.invoice" />
+    </div>
+    </div>
+    <div class="flex flex-row">
+      <el-button type="primary" class="mt-2 mr-4" @click="addCarrier">Add carrier</el-button>
+      <el-button type="danger" class="mt-2 mr-4" @click="deleteCarrier">Delete Carrier</el-button>
     </div>
   </div>
   <div class="bg-gray-200 mx-4 flex flex-row pt-5 pl-3">
@@ -91,12 +149,15 @@ const setPlateNumber = (value: string) => {
       <SizedInputComponent v-model="order.currentCarrier.driverName" />
       <SizedInputComponent v-model="order.currentCarrier.driverPhone" />
     </div>
-    <div class="flex flex-col mt-4 gap-14 ml-3">
+    <div class="flex flex-col mt-4 gap-2.5 ml-3">
       <button @click="newCarrierDialogVisibility = true"
         class="px-2.5 py-1.5 rounded-full bg-blue-400 active:bg-blue-600">
         <i class="bi bi-plus-lg text-white !font-extrabold"></i>
       </button>
-      <button class="px-2.5 py-1.5 rounded-full bg-blue-400 active:bg-blue-600">
+      <button @click="newContactDialogVisibility = true" class="px-2.5 py-1.5 rounded-full bg-blue-400 active:bg-blue-600">
+        <i class="bi bi-plus-lg text-white !font-extrabold"></i>
+      </button>
+      <button @click="newPlateDialogVisibility = true" class="px-2.5 py-1.5 rounded-full bg-blue-400 active:bg-blue-600">
         <i class="bi bi-plus-lg text-white !font-extrabold"></i>
       </button>
     </div>
@@ -114,5 +175,17 @@ const setPlateNumber = (value: string) => {
       <el-button @click="carrier.getViesData" type="primary">Validate Vat Code</el-button>
     </div>
     <AddNewCarrierComponent />
+  </el-dialog>
+  <el-dialog v-model="newPlateDialogVisibility" width="1300">
+    <BigTitle :text="'Add New Plate'"/>
+    <div class="flex justify-center">
+      <AddNewPlateComponent :carrierName="order.currentCarrier.carrierName" @createdVehicle="vehicleCreatedRoutine"/>
+    </div>
+  </el-dialog>
+  <el-dialog v-model="newContactDialogVisibility" width="700">
+    <BigTitle :text="'Add New Contact'"/>
+    <div class="flex justify-center">
+      <AddNewContactComponent :carrierName="order.currentCarrier.carrierName" @contactCreated="contactCreatedRoutine"/>
+    </div>
   </el-dialog>
 </template>

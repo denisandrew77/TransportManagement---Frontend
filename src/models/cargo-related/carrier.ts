@@ -1,7 +1,7 @@
 import type { carrierContact } from "./carrierContact"
 
 export interface carrier {
-  nif: string
+  fiscalCode: string
   fiscalName: string
   orc: string
   commercialName: string
@@ -14,8 +14,8 @@ export interface carrier {
   address: string
   city: string
   swift: string
-  phone: string
-  bank: string
+  phoneNumber: string
+  bankName: string
   iban: string
   vatPercentage: number
   contact: {

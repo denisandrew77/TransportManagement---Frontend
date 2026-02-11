@@ -5,7 +5,7 @@ import { defineStore } from 'pinia'
 
 export const useCarrierStore = defineStore('carrier', {
   state: (): carrier => ({
-    nif: '',
+    fiscalCode: '',
     fiscalName: '',
     orc: '',
     commercialName: '',
@@ -18,8 +18,8 @@ export const useCarrierStore = defineStore('carrier', {
     address: '',
     city: '',
     swift: '',
-    phone: '',
-    bank: '',
+    phoneNumber: '',
+    bankName: '',
     iban: '',
     vatPercentage: 0,
     contact: {
@@ -34,7 +34,7 @@ export const useCarrierStore = defineStore('carrier', {
       const token = localStorage.getItem('token');
       await api.post("/verifyCarrier", {
         countryCode: this.country,
-        vatNumber: this.nif
+        vatNumber: this.fiscalCode
       },{
         headers: {
           'Authorization': token
@@ -48,7 +48,7 @@ export const useCarrierStore = defineStore('carrier', {
       const token = localStorage.getItem("token");
       await api.post("/addCarrier",{
         carrier:{
-          fiscalCode: this.nif,
+          fiscalCode: this.fiscalCode,
         fiscalName: this.fiscalName,
         orc: this.orc,
         commercialName: this.commercialName,
@@ -61,8 +61,8 @@ export const useCarrierStore = defineStore('carrier', {
         address: this.address,
         city: this.city,
         swift: this.swift,
-        phoneNumber: this.phone,
-        bankName: this.bank,
+        phoneNumber: this.phoneNumber,
+        bankName: this.bankName,
         iban: this.iban,
         vatPercentage: this.vatPercentage,
         }
@@ -72,6 +72,18 @@ export const useCarrierStore = defineStore('carrier', {
         }
       }).then((response)=>{
         console.log(response.data.message);
+      })
+    },
+    async updateCarrier(){
+      const token = localStorage.getItem("token");
+      await api.put("/updateCarrier",{
+        carrier: this
+      }, {
+        headers:{
+          'Authorization': token
+        }
+      }).then((response)=>{
+        console.log(response);
       })
     },
     async createCarrierContact(carrier: string){
@@ -104,7 +116,7 @@ export const useCarrierStore = defineStore('carrier', {
       });
     },
     resetCarrierFields(){
-      this.nif = '';
+      this.fiscalCode = '';
       this.fiscalName = '';
       this.orc = '';
       this.commercialName = '';
@@ -117,8 +129,8 @@ export const useCarrierStore = defineStore('carrier', {
       this.address = '';
       this.city = '';
       this.swift = '';
-      this.phone = '';
-      this.bank = '';
+      this.phoneNumber = '';
+      this.bankName = '';
       this.iban = '';
       this.vatPercentage = 0;
     },
@@ -128,6 +140,25 @@ export const useCarrierStore = defineStore('carrier', {
         phoneNumber: '',
         email: ''
       };
+    },
+    setCarrier(carrier: carrier){
+      this.fiscalCode = carrier.fiscalCode;
+      this.fiscalName = carrier.fiscalName;
+      this.orc = carrier.orc;
+      this.commercialName = carrier.commercialName;
+      this.country = carrier.country;
+      this.currency = carrier.currency;
+      this.capital = carrier.capital;
+      this.registered = carrier.registered;
+      this.postalCode = carrier.postalCode;
+      this.county = carrier.county;
+      this.address = carrier.address;
+      this.city = carrier.city;
+      this.swift = carrier.swift;
+      this.phoneNumber = carrier.phoneNumber;
+      this.bankName = carrier.bankName;
+      this.iban = carrier.iban;
+      this.vatPercentage = carrier.vatPercentage;
     }
   },
 })

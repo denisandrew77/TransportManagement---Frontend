@@ -14,8 +14,21 @@ export const useCarriers = defineStore('carriers', {
           'Authorization': token
         }
       }).then((response)=>{
-        this.carrierList = response.data.carrierList;
-      })
-    }
+        this.carrierList=response.data.carrierList;
+      });
+    },
+    async deleteCarrier(commercialName: string){
+      const token = localStorage.getItem("token");
+      await api.delete("/deleteCarrier",{
+        headers:{
+          'Authorization': token
+        },
+        params:{
+          commercialName: commercialName
+        }
+      }).then((response)=>{
+        console.log(response.data);
+      });
+    },
   }
 })

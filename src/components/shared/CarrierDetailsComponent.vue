@@ -107,7 +107,7 @@ const vehicleCreatedRoutine = ()=>{
   <div class="mx-4 bg-blue-300 flex flex-row justify-between">
     <div class="flex flex-row">
       <div class="flex flex-row" v-for="carrier in order.carriers">
-      <button @click="showCarrierbyIndex(carrier.number)" class="bg-gray-200 w-14 focus:bg-gray-300">
+      <button @click="showCarrierbyIndex(carrier.number)" class="bg-gray-300 w-14 focus:bg-gray-200">
         {{ carrier.number }}
       </button>
     </div>
@@ -121,13 +121,14 @@ const vehicleCreatedRoutine = ()=>{
       <el-button type="danger" class="mt-2 mr-4" @click="deleteCarrier">Delete Carrier</el-button>
     </div>
   </div>
-  <div class="bg-gray-200 mx-4 flex flex-row pt-5 pl-3">
-    <div class="flex flex-col gap-6 mt-5">
+  <div class="bg-gray-200 mx-4 flex flex-row gap-20 pt-5 pl-8">
+    <div class="flex flex-row">
+      <div class="flex flex-col gap-6 mt-5">
       <div v-for="element in carrierFiedls">
         {{ element.name }}
       </div>
     </div>
-    <div class="w-70 gap-4 px-2 mt-4 flex flex-col">
+    <div class="w-70 gap-4 px-2 mt-4 flex flex-col ml-6">
       <el-select filterable @change="setCarrier" v-model="order.currentCarrier.carrierName">
         <el-option v-for="carrier in carriers.carrierList" :key="carrier.commercialName" :value="carrier.commercialName"
           :label="carrier.commercialName">
@@ -149,7 +150,7 @@ const vehicleCreatedRoutine = ()=>{
       <SizedInputComponent v-model="order.currentCarrier.driverName" />
       <SizedInputComponent v-model="order.currentCarrier.driverPhone" />
     </div>
-    <div class="flex flex-col mt-4 gap-2.5 ml-3">
+    <div class="flex flex-col mt-4 gap-2.5 ml-5">
       <button @click="newCarrierDialogVisibility = true"
         class="px-2.5 py-1.5 rounded-full bg-blue-400 active:bg-blue-600">
         <i class="bi bi-plus-lg text-white !font-extrabold"></i>
@@ -161,8 +162,9 @@ const vehicleCreatedRoutine = ()=>{
         <i class="bi bi-plus-lg text-white !font-extrabold"></i>
       </button>
     </div>
+    </div>
     <JobEstimateComponent class="mb-10 ml-20" />
-    <div class="flex flex-row gap-4 ml-8">
+    <div class="flex flex-col gap-4 ml-8">
       <ObservationsComponent :name="'Additional Information'" :redText="'show in Order'"
         v-model="order.currentCarrier.additionalInfoForOrder" />
       <ObservationsComponent :name="'Additional Information'" :redText="'show in UPDATES'"

@@ -4,11 +4,11 @@ const props = defineProps({
 });
 
 const emit = defineEmits<{
-  (e: "clicked"): void
+  (e: "clicked", value: boolean): void
 }>();
 
 const sendClicked = () => {
-  emit('clicked');
+  emit('clicked', true);
 }
 </script>
 <template>

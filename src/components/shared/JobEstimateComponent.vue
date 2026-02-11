@@ -53,11 +53,11 @@ watch([carrierPrice, highwaysPrice, waitingPrice, hotelPrice, clientPrice, total
     <div class="flex flex-row justify-around">
       <div class="flex flex-col items-center mt-2">
           <span class="text-xs">Carrier price</span>
-          <div class="font-bold text-2xl">{{routeAndPrice.totalCarrierPrice}}€</div>
+          <div class="font-bold text-2xl">{{routeAndPrice.totalCarrierPrice}} €</div>
       </div>
       <div class="flex flex-col items-center">
           <span class="text-xs">Profit</span>
-          <div class=" font-medium text-2xl p-2 bg-green-700 text-white rounded-md">{{routeAndPrice.profit}}€</div>
+          <div class=" font-medium text-2xl p-2 bg-green-700 text-white rounded-md">{{routeAndPrice.profit}} €</div>
       </div>
     </div>
   </div>

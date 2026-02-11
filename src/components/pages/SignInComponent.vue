@@ -35,7 +35,7 @@ const signIn = async () => {
     <div class="flex flex-col items-center justify-center gap-5 bg-white w-2xs rounded-2xl p-7">
       <img :src="sigla_denicar" alt="" class="w-55" />
       <InputComponent placeHolder="Username" v-model="user.userName" />
-      <InputComponent placeHolder="Password" v-model="user.password" @keyup.enter="signIn" />
+      <InputComponent placeHolder="Password" v-model="user.password" @keyup.enter="signIn" :passwordBox="true"/>
       <ErrorMessageComponent :name="'Please enter username and password'" v-if="emptyUserOrPass" />
       <ErrorMessageComponent :name="'Wrong credentials'" v-if="wrongCredentials" />
       <ButtonComponent :name="'Sign in'" @clicked="signIn" />

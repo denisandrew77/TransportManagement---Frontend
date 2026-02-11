@@ -22,6 +22,7 @@ export default defineConfigWithVueTs(
   {
     rules: {
       'vue/require-v-for-key': 'off',
+      'vue/no-mutating-props': 'off',
     },
   },
   {

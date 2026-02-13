@@ -19,8 +19,9 @@ onMounted(async ()=>{
   carrierList.value = carriers.carrierList;
 })
 const deleteCarrier = async (commercialName: string)=>{
-  setCurrentCarrier(commercialName);
   await carriers.deleteCarrier(commercialName);
+  await carriers.getCarriers();
+  carrierList.value = carriers.carrierList;
   dialogVisibility.value=false;
 }
 
@@ -30,12 +31,11 @@ const setCurrentCarrier = (carrier: string)=>{
 }
 
 const editCarrier = (carrierName: string)=>{
-  carriers.carrierList.forEach((carrier)=>{
-    if(carrier.commercialName===carrierName){
-      theCarrier.setCarrier(carrier);
-    }
-  })
-  router.push({name: 'NewCarrier', params: {state: 'edit'}});
+  const foundCarrier = carriers.carrierList.find((carrier)=> carrier.commercialName === carrierName);
+  if(foundCarrier){
+    theCarrier.setCarrier(foundCarrier);
+    router.push({name: 'NewCarrier', params: {state: 'edit'}});
+  }
 }
 
 const filterCompanies = () =>{
@@ -61,5 +61,5 @@ const filterCompanies = () =>{
       <CompaniesTable :carriers="carrierList" @editRequest="editCarrier" @deleteRequest="setCurrentCarrier"/>
     </div>
   </div>
-  <DeleteConfirmationDialog :visibility="dialogVisibility" :currentCarrier="currentCarrier" @deleteRequest="deleteCarrier"/>
+  <DeleteConfirmationDialog v-model:visibility="dialogVisibility" :currentCarrier="currentCarrier" @deleteRequest="deleteCarrier"/>
 </template>

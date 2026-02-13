@@ -21,7 +21,7 @@ const handleChange = (value: string) => {
 <template>
   <div class="flex flex-col items-start">
     <span>{{ label }}</span>
-    <el-select filterable :model-value="modelValue" @change="handleChange">
+    <el-select filterable :model-value="modelValue" @update:model-value="handleChange">
       <el-option v-for="currency in currencyList" :key="currency.code" :label="`${currency.code} - ${currency.name}`"
         :value="currency.code" />
     </el-select>

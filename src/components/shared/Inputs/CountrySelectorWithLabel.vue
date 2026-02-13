@@ -17,7 +17,7 @@ const handleChange = (value: string) => {
   <div class="flex flex-col items-start">
     <span>{{ label }}</span>
     <el-select filterable :model-value="modelValue" @update:model-value="handleChange">
-      <el-option v-for="(country, code) in countries" :key="code" :label="country.name" :value="code" />
+      <el-option v-for="(country, code) in countries" :key="code" :label="country.name" :value="country.name" />
     </el-select>
   </div>
 </template>

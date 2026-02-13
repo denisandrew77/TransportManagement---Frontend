@@ -5,6 +5,8 @@ import { useUserStore } from '@/stores/user';
 import { createRouter, createWebHistory } from 'vue-router'
 import NewCarrierComponent from '@/components/pages/NewCarrierComponent.vue';
 import CarriersComponent from '@/components/pages/CarriersComponent.vue';
+import ClientsPage from '@/components/pages/ClientsPage.vue';
+import NewClientPage from '@/components/pages/NewClientPage.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,6 +48,22 @@ const router = createRouter({
       name: 'Carriers',
       component: CarriersComponent,
       meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/clients',
+      name: 'Clients',
+      component: ClientsPage,
+      meta:{
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/newClient/:state?',
+      name: 'NewClient',
+      component: NewClientPage,
+      meta:{
         requiresAuth: true
       }
     }

@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router';
 import HeaderLinkComponent from './HeaderLinkComponent.vue';
 import byExpressWhite from "@/assets/byexpressWhite.png";
-const header: { name: string; route: string; }[] = [{name: "Orders", route: "/"}, {name: "Clients", route: "/"}, {name: "Carriers", route:"/carriers"}, {name:"Invoices", route: "/"}, {name: "Settings", route: "/"}];
+const header: { name: string; route: string; }[] = [{name: "Orders", route: "/dashboard"}, {name: "Clients", route: "/clients"}, {name: "Carriers", route:"/carriers"}, {name:"Invoices", route: "/"}, {name: "Settings", route: "/"}];
 const router = useRouter();
 </script>
 <template>

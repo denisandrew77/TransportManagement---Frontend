@@ -36,6 +36,18 @@ const carrierFiedls = [
 
 const showCarrierbyIndex = (index: number) => {
   order.carriers.forEach((carrier) => {
+    if (carrier.number === order.currentCarrier.number) {
+      carrier.carrierName = order.currentCarrier.carrierName;
+      carrier.contact = order.currentCarrier.contact;
+      carrier.plateNumber = order.currentCarrier.plateNumber;
+      carrier.driverName = order.currentCarrier.driverName;
+      carrier.driverPhone = order.currentCarrier.driverPhone;
+      carrier.additionalInfoForOrder = order.currentCarrier.additionalInfoForOrder;
+      carrier.additionalInfoForUpdates = order.currentCarrier.additionalInfoForUpdates;
+      carrier.invoice = order.currentCarrier.invoice;
+    }
+  })
+  order.carriers.forEach((carrier) => {
     if (carrier.number === index) {
       order.currentCarrier = carrier;
     }
@@ -44,6 +56,11 @@ const showCarrierbyIndex = (index: number) => {
 
 const setCarrier = async (value: string) => {
   order.currentCarrier.carrierName = value
+  order.carriers.forEach((carrier)=>{
+    if(carrier.number===order.currentCarrier.number){
+      carrier.carrierName=value;
+    }
+  })
   await carrier.getCarrierContacts(value);
   await vehicles.getCarrierVehicles(value);
   order.currentCarrier.contact = '';
@@ -51,11 +68,27 @@ const setCarrier = async (value: string) => {
 }
 const setContact = (value: string) => {
   order.currentCarrier.contact = value;
+  order.carriers.forEach((carrier)=>{
+    if(carrier.number===order.currentCarrier.number){
+      carrier.contact=value;
+    }
+  })
 }
 const setPlateNumber = (value: string) => {
   order.currentCarrier.plateNumber = value;
   order.currentCarrier.driverName = String(vehicles.vehicles.find((vehicle)=>vehicle.plateNumber===value)?.driverName);
+  order.carriers.forEach((carrier)=>{
+    if(carrier.number===order.currentCarrier.number){
+      carrier.plateNumber=value;
+      carrier.driverName = String(vehicles.vehicles.find((vehicle)=>vehicle.plateNumber===value)?.driverName);
+    }
+  })
   order.currentCarrier.driverPhone = String(vehicles.vehicles.find((vehicle)=>vehicle.plateNumber===value)?.driverPhoneNumber);
+  order.carriers.forEach((carrier)=>{
+    if(carrier.number===order.currentCarrier.number){
+      carrier.driverPhone = String(vehicles.vehicles.find((vehicle)=>vehicle.plateNumber===value)?.driverPhoneNumber);
+    }
+  })
 }
 
 const addCarrier = () => {
@@ -83,7 +116,14 @@ const deleteCarrier = ()=>{
     if(changed===true){
       carrier.number--;
     }
-  })
+  });
+
+  // Safely get the previous carrier or the first one
+  const newIndex = Math.max(0, index - 2);
+  const newCarrier = order.carriers[newIndex];
+  if(newCarrier){
+    order.setCurrentCarrier(newCarrier);
+  }
 }
 const contactCreatedRoutine = ()=>{
   newContactDialogVisibility.value=false;
@@ -102,6 +142,33 @@ const vehicleCreatedRoutine = ()=>{
   order.currentCarrier.driverPhone = vehicles.driverPhoneNumber;
   vehicles.resetVehicleFields();
 }
+
+const setInvoice = (value: string) =>{
+  order.currentCarrier.invoice = value;
+  order.carriers.forEach((carrier)=>{
+    if(carrier.number===order.currentCarrier.number){
+      carrier.invoice=value;
+    }
+  })
+}
+
+const setInfoForOrder = (value: string) =>{
+  order.currentCarrier.additionalInfoForOrder = value;
+  order.carriers.forEach((carrier)=>{
+    if(carrier.number===order.currentCarrier.number){
+      carrier.additionalInfoForOrder=value;
+    }
+  })
+}
+
+const setInfoForUpdates = (value: string) =>{
+  order.currentCarrier.additionalInfoForUpdates = value;
+  order.carriers.forEach((carrier)=>{
+    if(carrier.number===order.currentCarrier.number){
+      carrier.additionalInfoForUpdates=value;
+    }
+  })
+}
 </script>
 <template>
   <div class="mx-4 bg-blue-300 flex flex-row justify-between">
@@ -113,7 +180,7 @@ const vehicleCreatedRoutine = ()=>{
     </div>
     <div class="w-1/10 flex flex-row items-center gap-3 p-2">
       <SmallBlackTitleComponent :text="'Invoice'" />
-      <SizedInputComponent class="w-54" v-model="order.currentCarrier.invoice" />
+      <SizedInputComponent class="w-54" :modelValue="order.currentCarrier.invoice" @update:modelValue="setInvoice"/>
     </div>
     </div>
     <div class="flex flex-row">
@@ -166,9 +233,9 @@ const vehicleCreatedRoutine = ()=>{
     <JobEstimateComponent class="mb-10 ml-20" />
     <div class="flex flex-col gap-4 ml-8">
       <ObservationsComponent :name="'Additional Information'" :redText="'show in Order'"
-        v-model="order.currentCarrier.additionalInfoForOrder" />
+        :modelValue="order.currentCarrier.additionalInfoForOrder" @update:modelValue="setInfoForOrder"/>
       <ObservationsComponent :name="'Additional Information'" :redText="'show in UPDATES'"
-        v-model="order.currentCarrier.additionalInfoForUpdates" />
+        :modelValue="order.currentCarrier.additionalInfoForUpdates" @update:modelValue="setInfoForUpdates"/>
     </div>
   </div>
   <el-dialog v-model="newCarrierDialogVisibility">

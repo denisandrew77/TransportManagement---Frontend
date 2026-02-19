@@ -49,21 +49,21 @@ const setTime = (value: string) => {
 </script>
 <template>
   <div class="flex flex-col gap-2 w-70">
-    <SizedInputComponent :modelValue="modelValue.name" @sendValue="setName" class="w-80"/>
-    <SizedInputComponent :modelValue="modelValue.address" @sendValue="setAddress" class="w-80"/>
+    <SizedInputComponent :modelValue="modelValue.name" @update:modelValue="setName" class="w-80"/>
+    <SizedInputComponent :modelValue="modelValue.address" @update:modelValue="setAddress" class="w-80"/>
     <div class="flex flex-row gap-2">
-      <SizedInputComponent :modelValue="modelValue.postalCode" @sendValue="setPostalCode" class="w-35" />
-      <SizedInputComponent :modelValue="modelValue.city" @sendValue="setCity" class="w-43" />
+      <SizedInputComponent :modelValue="modelValue.postalCode" @update:modelValue="setPostalCode" class="w-35" />
+      <SizedInputComponent :modelValue="modelValue.city" @update:modelValue="setCity" class="w-43" />
     </div>
     <div class="flex flex-row gap-2">
-      <SizedInputComponent :modelValue="modelValue.country" @sendValue="setCountry" class="w-20" />
+      <SizedInputComponent :modelValue="modelValue.country" @update:modelValue="setCountry" class="w-20" />
       <div>Refs</div>
-      <SizedInputComponent :modelValue="modelValue.refferences" @sendValue="setReference" class="w-48" />
+      <SizedInputComponent :modelValue="modelValue.refferences" @update:modelValue="setReference" class="w-48" />
     </div>
-    <SizedInputComponent :modelValue="modelValue.contacts" @sendValue="setContact"  class="w-80"/>
+    <SizedInputComponent :modelValue="modelValue.contacts" @update:modelValue="setContact"  class="w-80"/>
     <div class="flex flex-row gap-2">
       <el-date-picker :model-value="modelValue.date" @update:model-value="setDate"/>
-      <TimeInputComponent :modelValue="modelValue.time" @sendValue="setTime" class="w-14" />
+      <TimeInputComponent :modelValue="modelValue.time" @update:modelValue="setTime" class="w-14" />
     </div>
   </div>
 </template>

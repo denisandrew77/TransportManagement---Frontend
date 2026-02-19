@@ -1,4 +1,6 @@
+import type { carrierDetailsForOrder } from '@/models/cargo-related/carrierForOrder';
 import type { cargoOrder } from '@/models/cargo-related/order'
+import { api } from '@/services/api';
 import { defineStore } from 'pinia'
 export const useOrder = defineStore('orderStore', {
   state: (): cargoOrder => ({
@@ -80,17 +82,50 @@ export const useOrder = defineStore('orderStore', {
         additionalInfoForOrder: '',
         additionalInfoForUpdates: '',
       },
-      {
-        number: 2,
-        invoice: '',
-        carrierName: '',
-        contact: '',
-        plateNumber: '',
-        driverName: '',
-        driverPhone: '',
-        additionalInfoForOrder: '',
-        additionalInfoForUpdates: '',
-      },
     ],
   }),
+  actions:{
+    async createOrder(){
+      const token = localStorage.getItem("token");
+      await api.post("/addOrder",{
+        orderDetails:{
+          orderNumber: this.orderNumber,
+          client: this.client,
+          clientReference: this.clientRefference,
+          loading: this.loading,
+          delivery: this.delivery,
+          goods: this.goods,
+          carriers: this.carriers
+        },
+      }, {
+        headers:{
+          'Authorization': token
+        }
+      });
+    },
+    async setNewOrderNumber(){
+      const token = localStorage.getItem("token");
+      await api.get("/getLastOrderNumber",{
+        headers:{
+          'Authorization': token
+        }
+      }).then((response)=>{
+        this.orderNumber = response.data.lastOrderNumber + 1;
+      });
+    },
+    verifyIfFieldsCompleted():boolean{
+      console.log("verifyIfFieldsCompleted() called!");
+      const loading: boolean = Object.values({...this.loading, date: "completed"}).every(element=> element!=="");
+      const delivery: boolean = Object.values({...this.delivery, date: "completed"}).every(element=> element!=="");
+      const goods: boolean = this.goods.every((good)=>Number(good.height)>0 && Number(good.length)>0 && Number(good.number)>0 && good.type!=="" && Number(good.weight)>0 && Number(good.width)>0);
+      const carriers: boolean = this.carriers.every((carrier)=> carrier.additionalInfoForOrder!=="" && carrier.additionalInfoForUpdates !=="" && carrier.carrierName!=="" && carrier.contact!=="" && carrier.driverName!=="" && carrier.driverPhone!=="" && carrier.invoice!=="" && carrier.plateNumber!=="");
+      if(this.client!=="" && this.clientRefference!=="" && loading && delivery && goods && carriers) {
+        return true
+      }
+      else return false
+    },
+    setCurrentCarrier(carrier: carrierDetailsForOrder){
+      this.currentCarrier = carrier;
+    }
+  }
 })

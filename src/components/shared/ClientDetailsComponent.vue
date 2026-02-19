@@ -8,15 +8,33 @@ import IndexListComponent from './Client/IndexListComponent.vue'
 import GoodsComponent from './GoodsComponent.vue'
 import MediumTitle from './TextPieces/MediumTitle.vue'
 import { useOrder } from '@/stores/order'
-import ObservationsComponent from './Inputs/ObservationsComponent.vue'
+import { onMounted, ref } from 'vue'
+import UnCompletedFieldsDialog from './Dialogs/UnCompletedFieldsDialog.vue'
+
+onMounted(async ()=>{
+  await order.setNewOrderNumber();
+})
 
 const order = useOrder()
+
+const saveOrder = async () =>{
+  if(order.verifyIfFieldsCompleted()){
+    await order.createOrder();
+    await order.setNewOrderNumber();
+  }
+  else dialogVisibility.value=true;
+}
+
+const dialogVisibility = ref(false);
 </script>
 <template>
   <div class="m-4">
     <div class="bg-blue-300 p-2 flex flex-row justify-between">
       <div class="flex flex-row gap-6">
-        <div class="text-xs pt-2">Order-No</div>
+        <div class="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-800 px-3 py-1.5 rounded-md">
+          <i class="bi bi-box-seam-fill text-white text-lg"></i>
+          <span class="text-base font-bold text-white">{{ order.orderNumber }}</span>
+        </div>
         <div class="flex flex-row items-center gap-2 text-xl font-bold">
           <div>Client</div>
           <div>
@@ -38,7 +56,7 @@ const order = useOrder()
         </div>
         <div class="">
           <RedButtonComponent :name="'Delete'" class="mr-4" />
-          <GreenButtonComponent :name="'Save and edit this item'" />
+          <GreenButtonComponent :name="'Save and edit this item'" @clicked="saveOrder"/>
         </div>
       </div>
     </div>
@@ -54,10 +72,8 @@ const order = useOrder()
           <LoadingDetailsComponent v-model="order.delivery" />
         </div>
         <GoodsComponent />
-        <div class="flex flex-col">
-          <ObservationsComponent v-model="order.observations" :name="'Observations'" />
-        </div>
       </div>
     </div>
   </div>
+  <UnCompletedFieldsDialog v-model:visibility="dialogVisibility" @update:visibility="dialogVisibility=false"/>
 </template>

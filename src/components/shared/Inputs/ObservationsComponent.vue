@@ -16,7 +16,7 @@ const emit = defineEmits<{
       <SmallBlackTitleComponent :text="name" />
       <SmallBlackTitleComponent :text="redText" class="text-red-500" />
     </div>
-    <el-input :value="modelValue" @input="emit('update:modelValue', $event.target.value)" style="width: 320px"
+    <el-input :model-value="modelValue" @input="emit('update:modelValue', $event)" style="width: 320px"
       type="textarea" />
   </div>
 </template>

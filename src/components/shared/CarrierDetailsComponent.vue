@@ -13,8 +13,9 @@ import { useCarriers } from '@/stores/carriers'
 import BigTitle from './TextPieces/BigTitle.vue'
 import { useVehicles } from '@/stores/vehicle'
 
-onMounted(()=>{
-  carriers.getCarriers();
+onMounted(async()=>{
+  await carriers.getCarriers();
+  order.calculateTotalCarrierPrice();
 })
 
 const order = useOrder()
@@ -25,6 +26,7 @@ const vehicles = useVehicles()
 const newCarrierDialogVisibility = ref(false)
 const newPlateDialogVisibility = ref(false)
 const newContactDialogVisibility = ref(false)
+const currentCarrierNumber = ref(1);
 
 const carrierFiedls = [
   { name: 'Carrier' },
@@ -35,6 +37,7 @@ const carrierFiedls = [
 ]
 
 const showCarrierbyIndex = (index: number) => {
+  currentCarrierNumber.value=index;
   order.carriers.forEach((carrier) => {
     if (carrier.number === order.currentCarrier.number) {
       carrier.carrierName = order.currentCarrier.carrierName;
@@ -45,6 +48,11 @@ const showCarrierbyIndex = (index: number) => {
       carrier.additionalInfoForOrder = order.currentCarrier.additionalInfoForOrder;
       carrier.additionalInfoForUpdates = order.currentCarrier.additionalInfoForUpdates;
       carrier.invoice = order.currentCarrier.invoice;
+      carrier.highways = order.currentCarrier.highways;
+      carrier.waiting = order.currentCarrier.waiting;
+      carrier.hotel = order.currentCarrier.hotel;
+      carrier.carrierPrice = order.currentCarrier.carrierPrice;
+      carrier.totalCarrierPrice = order.currentCarrier.totalCarrierPrice;
     }
   })
   order.carriers.forEach((carrier) => {
@@ -101,7 +109,12 @@ const addCarrier = () => {
     driverPhone: '',
     additionalInfoForOrder: '',
     additionalInfoForUpdates: '',
-    invoice: ''
+    invoice: '',
+    highways: 0,
+    waiting: 0,
+    hotel: 0,
+    carrierPrice: 0,
+    totalCarrierPrice: 0,
   });
   showCarrierbyIndex(order.carriers.length);
 }
@@ -230,7 +243,7 @@ const setInfoForUpdates = (value: string) =>{
       </button>
     </div>
     </div>
-    <JobEstimateComponent class="mb-10 ml-20" />
+    <JobEstimateComponent class="mb-10 ml-20" :currentCarrierNumber="currentCarrierNumber"/>
     <div class="flex flex-col gap-4 ml-8">
       <ObservationsComponent :name="'Additional Information'" :redText="'show in Order'"
         :modelValue="order.currentCarrier.additionalInfoForOrder" @update:modelValue="setInfoForOrder"/>

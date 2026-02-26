@@ -2,6 +2,7 @@
 import SizedInputComponent from '../Inputs/SizedInputComponent.vue'
 import TimeInputComponent from '../Inputs/TimeInputComponent.vue'
 import type { loading } from '@/models/cargo-related/loadingAndDelivery'
+import CountrySelector from '../Inputs/CountrySelector.vue';
 
 const props = defineProps<{
   modelValue: loading
@@ -48,7 +49,7 @@ const setTime = (value: string) => {
 }
 </script>
 <template>
-  <div class="flex flex-col gap-2 w-70">
+  <div class="flex flex-col gap-2 w-80">
     <SizedInputComponent :modelValue="modelValue.name" @update:modelValue="setName" class="w-80"/>
     <SizedInputComponent :modelValue="modelValue.address" @update:modelValue="setAddress" class="w-80"/>
     <div class="flex flex-row gap-2">
@@ -56,7 +57,7 @@ const setTime = (value: string) => {
       <SizedInputComponent :modelValue="modelValue.city" @update:modelValue="setCity" class="w-43" />
     </div>
     <div class="flex flex-row gap-2">
-      <SizedInputComponent :modelValue="modelValue.country" @update:modelValue="setCountry" class="w-20" />
+      <div class="w-full"><CountrySelector :modelValue="modelValue.country" @update:modelValue="setCountry"/></div>
       <div>Refs</div>
       <SizedInputComponent :modelValue="modelValue.refferences" @update:modelValue="setReference" class="w-48" />
     </div>

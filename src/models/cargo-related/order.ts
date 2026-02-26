@@ -1,6 +1,7 @@
 import type { carrierDetailsForOrder } from './carrierForOrder'
 import type { goods } from './goods'
 import type { delivery, loading } from './loadingAndDelivery'
+import type { finalPrice, individualCarrierPrice } from './priceAndTimeCalculation'
 
 export interface cargoOrder {
   orderNumber: number
@@ -10,6 +11,7 @@ export interface cargoOrder {
   delivery: delivery
   goods: goods[]
   observations: string
-  currentCarrier: carrierDetailsForOrder
-  carriers: carrierDetailsForOrder[]
+  currentCarrier: carrierDetailsForOrder & individualCarrierPrice
+  carriers: (carrierDetailsForOrder & individualCarrierPrice)[]
+  finalPrice: finalPrice
 }

@@ -3,7 +3,7 @@ import type { cargoOrder } from '@/models/cargo-related/order'
 import { api } from '@/services/api';
 import { defineStore } from 'pinia'
 export const useOrder = defineStore('orderStore', {
-  state: (): cargoOrder => ({
+  state: (): cargoOrder  => ({
     orderNumber: 0,
     client: '',
     clientRefference: '',
@@ -39,24 +39,6 @@ export const useOrder = defineStore('orderStore', {
         weight: 0,
         stack: false,
       },
-      {
-        type: '',
-        number: 0,
-        length: 1,
-        width: 0,
-        height: 0,
-        weight: 0,
-        stack: false,
-      },
-      {
-        type: '',
-        number: 0,
-        length: 0,
-        width: 0,
-        height: 0,
-        weight: 0,
-        stack: false,
-      },
     ],
     observations: '',
     currentCarrier: {
@@ -69,6 +51,11 @@ export const useOrder = defineStore('orderStore', {
       driverPhone: '',
       additionalInfoForOrder: '',
       additionalInfoForUpdates: '',
+      highways: 0,
+      waiting: 0,
+      hotel: 0,
+      carrierPrice: 0,
+      totalCarrierPrice: 0
     },
     carriers: [
       {
@@ -81,8 +68,17 @@ export const useOrder = defineStore('orderStore', {
         driverPhone: '',
         additionalInfoForOrder: '',
         additionalInfoForUpdates: '',
+        highways: 0,
+        waiting: 0,
+        hotel: 0,
+        carrierPrice: 0,
+        totalCarrierPrice: 0
       },
     ],
+    finalPrice: {
+      totalCarriersPrice: 0,
+      clientPrice: 0,
+    },
   }),
   actions:{
     async createOrder(){
@@ -95,7 +91,8 @@ export const useOrder = defineStore('orderStore', {
           loading: this.loading,
           delivery: this.delivery,
           goods: this.goods,
-          carriers: this.carriers
+          carriers: this.carriers,
+          finalPrice: this.finalPrice,
         },
       }, {
         headers:{
@@ -126,6 +123,96 @@ export const useOrder = defineStore('orderStore', {
     },
     setCurrentCarrier(carrier: carrierDetailsForOrder){
       this.currentCarrier = carrier;
+    },
+    resetFields(){
+      this.orderNumber = 0;
+      this.client = '';
+      this.clientRefference = '';
+      this.loading = {
+        name: '',
+        address: '',
+        postalCode: '',
+        city: '',
+        country: '',
+        refferences: '',
+        contacts: '',
+        date: String(new Date().toISOString().split('T')[0]),
+        time: '',
+      };
+      this.delivery = {
+        name: '',
+        address: '',
+        postalCode: '',
+        city: '',
+        country: '',
+        refferences: '',
+        contacts: '',
+        date: String(new Date().toISOString().split('T')[0]),
+        time: '',
+      };
+      this.goods = [
+        {
+          type: '',
+          number: 0,
+          length: 0,
+          width: 0,
+          height: 0,
+          weight: 0,
+          stack: false,
+        },
+      ];
+      this.observations = '';
+      this.currentCarrier = {
+        number: 1,
+        invoice: '',
+        carrierName: '',
+        contact: '',
+        plateNumber: '',
+        driverName: '',
+        driverPhone: '',
+        additionalInfoForOrder: '',
+        additionalInfoForUpdates: '',
+        highways: 0,
+        waiting: 0,
+        hotel: 0,
+        carrierPrice: 0,
+        totalCarrierPrice: 0
+      };
+      this.carriers = [
+        {
+          number: 1,
+          invoice: '',
+          carrierName: '',
+          contact: '',
+          plateNumber: '',
+          driverName: '',
+          driverPhone: '',
+          additionalInfoForOrder: '',
+          additionalInfoForUpdates: '',
+          highways: 0,
+          waiting: 0,
+          hotel: 0,
+          carrierPrice: 0,
+          totalCarrierPrice: 0
+        },
+      ];
+    },
+    calculateCarrierPrice(){
+     this.currentCarrier.totalCarrierPrice = this.currentCarrier.highways+this.currentCarrier.waiting+this.currentCarrier.hotel+this.currentCarrier.carrierPrice;
+      for(const carrier of this.carriers){
+        if(carrier.number===this.currentCarrier.number){
+          carrier.totalCarrierPrice = this.currentCarrier.totalCarrierPrice;
+        }
+      }
+    },
+    calculateTotalCarrierPrice(){
+      this.finalPrice.totalCarriersPrice = 0;
+      this.carriers.forEach((carrier)=>{
+        this.finalPrice.totalCarriersPrice += carrier.totalCarrierPrice;
+      });
+    },
+    calculateProfit(){
+
     }
   }
 })

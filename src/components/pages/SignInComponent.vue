@@ -20,7 +20,7 @@ const signIn = async () => {
   await user.authenticate()
   console.log(user.loggedIn)
   if (user.loggedIn) {
-    router.push('dashboard')
+    router.push('WelcomePage')
   } else if ((user.userName === '' || user.password === '') && user.loggedIn === false) {
     emptyUserOrPass.value = true
   } else if (user.loggedIn === false) {

@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import InputComponent from './Inputs/InputComponent.vue'
-import WhiteButtonComponent from './Buttons/WhiteButtonComponent.vue'
-import RedButtonComponent from './Buttons/RedButtonComponent.vue'
-import GreenButtonComponent from './Buttons/GreenButtonComponent.vue'
 import LoadingDetailsComponent from './Client/LoadingDetailsComponent.vue'
 import IndexListComponent from './Client/IndexListComponent.vue'
 import GoodsComponent from './GoodsComponent.vue'
@@ -10,17 +6,22 @@ import MediumTitle from './TextPieces/MediumTitle.vue'
 import { useOrder } from '@/stores/order'
 import { onMounted, ref } from 'vue'
 import UnCompletedFieldsDialog from './Dialogs/UnCompletedFieldsDialog.vue'
+import { useClients } from '@/stores/clients'
+import { useRouter } from 'vue-router'
 
 onMounted(async ()=>{
   await order.setNewOrderNumber();
+  await clients.getClients();
 })
 
 const order = useOrder()
+const clients = useClients();
+const router = useRouter();
 
 const saveOrder = async () =>{
   if(order.verifyIfFieldsCompleted()){
     await order.createOrder();
-    await order.setNewOrderNumber();
+    router.push("/dashboard");
   }
   else dialogVisibility.value=true;
 }
@@ -35,28 +36,33 @@ const dialogVisibility = ref(false);
           <i class="bi bi-box-seam-fill text-white text-lg"></i>
           <span class="text-base font-bold text-white">{{ order.orderNumber }}</span>
         </div>
-        <div class="flex flex-row items-center gap-2 text-xl font-bold">
-          <div>Client</div>
-          <div>
-            <InputComponent v-model="order.client" :placeHolder="'client name'" />
+        <div class="flex flex-row items-center gap-2 text-xl">
+          <div class="font-bold">Client</div>
+          <div class="w-48">
+            <el-select v-model="order.client">
+              <el-option
+                v-for="client in clients.clientList"
+                :label="client.commercialName"
+                :value="client.commercialName"
+                :key="client.commercialName"
+              />
+            </el-select>
           </div>
         </div>
         <div class="flex flex-row items-center gap-2 text-xl font-bold">
           <div>Client Ref</div>
           <div>
-            <InputComponent v-model="order.clientRefference" :placeHolder="'client refference'" />
+            <el-input v-model="order.clientRefference"></el-input>
           </div>
         </div>
       </div>
       <div class="flex flex-row gap-5">
-        <div class="flex flex-row gap-3">
-          <WhiteButtonComponent :name="'Duplicate'" />
-          <WhiteButtonComponent :name="'Show Map'" />
-          <WhiteButtonComponent :name="'Order to client'" />
-        </div>
-        <div class="">
-          <RedButtonComponent :name="'Delete'" class="mr-4" />
-          <GreenButtonComponent :name="'Save and edit this item'" @clicked="saveOrder"/>
+        <div class="flex flex-row gap-3 items-center">
+          <el-button>Duplicate</el-button>
+          <el-button>Show Map</el-button>
+          <el-button>Order to client</el-button>
+          <el-button type="danger">Delete</el-button>
+          <el-button type="success" @click="saveOrder">Save and edit this item</el-button>
         </div>
       </div>
     </div>

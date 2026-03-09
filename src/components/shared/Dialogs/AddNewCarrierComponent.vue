@@ -35,7 +35,7 @@ const inputTitleList = ref({
 
 </script>
 <template>
-  <div class="mt-3 grid grid-cols-4 gap-4 relative mb-5">
+  <div class="mt-3 grid grid-cols-4 gap-4 relative mb-5 ml-12">
     <InputWithText :label="inputTitleList.nif" v-model="carrier.fiscalCode" />
     <InputWithText :label="inputTitleList.fiscalName" v-model="carrier.fiscalName" />
     <InputWithText :label="inputTitleList.orc" v-model="carrier.orc" />
@@ -55,10 +55,10 @@ const inputTitleList = ref({
     <NumberInputWithText :label="inputTitleList.vatPercentage" v-model="carrier.vatPercentage" />
       <el-button @click="carrier.createCarrier" type="success" class="absolute right-8 bottom-0" size="large">Save</el-button>
   </div>
-  <div class="mb-4">
+  <div class="mb-4 mt-10">
     <BigTitle :text="'Add a new Contact'"/>
   </div>
-  <div class="grid grid-cols-4 gap-4 relative h-24">
+  <div class="grid grid-cols-4 gap-4 relative h-24 ml-12 mt-6">
     <InputWithText :label="inputTitleList.contactName" v-model="carrier.contact.name"/>
     <InputWithText :label="inputTitleList.contactMobilePhone" v-model="carrier.contact.phoneNumber"/>
     <InputWithText :label="inputTitleList.contactEmail" v-model="carrier.contact.email"/>

@@ -30,7 +30,7 @@ export const useClient = defineStore('client', {
     contacts: [] as carrierContact[],
   }),
   actions: {
-    async getViesData() {
+    async getViesData():Promise<boolean> {
       const token = localStorage.getItem('token');
       await api.post("/verifyCarrier", {
         countryCode: this.country,
@@ -40,9 +40,17 @@ export const useClient = defineStore('client', {
           'Authorization': token
         }
       }).then((response)=>{
-        this.address = response.data.address
-        this.fiscalName = response.data.name
-      })
+        if(response.data?.actionSucceed) {
+          this.address = response.data.address;
+          this.fiscalName = response.data.name;
+          return true;
+        }
+        else return false;
+      }).catch((error)=>{
+        console.error("Error validating VAT number:", error);
+        return false;
+      });
+      return false;
     },
     async createClient(){
       const token = localStorage.getItem("token");

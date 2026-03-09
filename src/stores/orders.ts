@@ -17,21 +17,52 @@ export const useOrders = defineStore("Orders", {
         }
       }).then((response)=>{
         this.orders = [];
-        if(response.data!==null && response.data!==undefined){
-          response.data.orders.forEach((order: ordersDbData)=>{
-            this.orders.push({
-              orderNumber: order.orderNumber,
-              plateNumber: this.platesToStringArray(order.carriers),
-              carrier: this.carriersToStringArray(order.carriers),
-              clientNumber: order.clientRefference,
-              client: order.clientName,
-              loading: [order.loadingCountry + " - " + order.loadingPostalCode + " - " + order.loadingCity, order.loadingTime+ " / "+ order.loadingDate],
-              delivery: [order.deliveryCountry + " - " + order.deliveryPostalCode + " - " + order.deliveryCity, order.deliveryTime+ " / "+ order.deliveryDate],
-              status: "N/A",
-              info: this.observationsForUpdatesToStringArray(order.carriers)})
-          })
-        }
+        this.orders = this.transformToTable(response.data.orders);
       });
+    },
+    async getOrdersByTextFound(text: string): Promise<orderTableColumn[]>{
+      const token = localStorage.getItem("token");
+      const records: orderTableColumn[] = await api.get("/searchAll",{
+        params:{
+          searchText: text
+        },
+        headers:{
+          'Authorization': token
+        }
+      }).then((response)=>{
+        return this.transformToTable(response.data.records);
+      });
+      console.log(records);
+      return records;
+    },
+    async getOrdersByOrderNumber(orderNumber: number): Promise<orderTableColumn[]>{
+      const token = localStorage.getItem("token");
+      const orders = await api.get("/getOrdersByOrderNumber",{
+        params:{
+          orderNumber: orderNumber
+        },
+        headers:{
+          'Authorization': token
+        }
+      }).then((response)=>{
+        console.log(response.data.orders)
+        return this.transformToTable(response.data.orders);
+      });
+      return orders
+    },
+    async getOrdersByDate(date: Date): Promise<orderTableColumn[]>{
+      const token = localStorage.getItem("token");
+      const orders = await api.get("/getOrdersByDate",{
+        params:{
+          date: date
+        },
+        headers:{
+          'Authorization': token
+        }
+      }).then((response)=>{
+        return this.transformToTable(response.data.orders);
+      });
+      return orders;
     },
     platesToStringArray(carriers: carrierDbData[]): string[]{
         const plates: string[] = [];
@@ -53,6 +84,24 @@ export const useOrders = defineStore("Orders", {
         additionalInfoForUpdates.push(carrier.observationsForUpdates);
       })
       return additionalInfoForUpdates
+    },
+    transformToTable(ordersArray: ordersDbData[]){
+      const transformedOrders :orderTableColumn[] = [] as orderTableColumn[];
+        if(ordersArray!==null && ordersArray!==undefined){
+          ordersArray.forEach((order: ordersDbData)=>{
+            transformedOrders.push({
+              orderNumber: order.orderNumber,
+              plateNumber: this.platesToStringArray(order.carriers),
+              carrier: this.carriersToStringArray(order.carriers),
+              clientNumber: order.clientRefference,
+              client: order.clientName,
+              loading: [order.loadingCountry + " - " + order.loadingPostalCode + " - " + order.loadingCity, order.loadingTime+ " / "+ order.loadingDate],
+              delivery: [order.deliveryCountry + " - " + order.deliveryPostalCode + " - " + order.deliveryCity, order.deliveryTime+ " / "+ order.deliveryDate],
+              status: "N/A",
+              info: this.observationsForUpdatesToStringArray(order.carriers)})
+          })
+        }
+        return transformedOrders;
     }
   }
 })

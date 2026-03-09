@@ -2,12 +2,16 @@
 import type { carrierTitles } from '@/models/UI-related/carrierTitles';
 import CompanyCreateComponent from '../shared/CompanyCreateComponent.vue';
 import BigTitle from '../shared/TextPieces/BigTitle.vue';
+import ErrorMessageComponent from '../shared/ErrorMessageComponent.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useClient } from '@/stores/client';
+import { ref } from 'vue';
 
 const route = useRoute();
 const router = useRouter();
 const client = useClient();
+const viesError = ref(false);
+
 const inputTitleList: carrierTitles = {
   nif: 'NIF',
   fiscalName: 'Fiscal name',
@@ -42,6 +46,16 @@ const executeCreateOrEdit = async()=>{
   }
 }
 
+const confirmClientInVies = async()=>{
+  const isValid = await client.getViesData();
+  if(!isValid){
+    viesError.value = true;
+  }
+  else{
+    viesError.value = false;
+  }
+}
+
 const handleModelUpdate = (updatedCarrier: any) => {
   Object.assign(client, updatedCarrier);
 }
@@ -61,5 +75,9 @@ const handleModelUpdate = (updatedCarrier: any) => {
     :modelValue="client.$state"
     @update:modelValue="handleModelUpdate"
     @saveRequest="executeCreateOrEdit"
-    @validateCodeRequest="client.getViesData"/>
+    @validateCodeRequest="confirmClientInVies"/>
+
+  <div class="w-full text-center mt-8" v-if="viesError">
+    <ErrorMessageComponent :name="'Error retrieving company data'"/>
+  </div>
 </template>

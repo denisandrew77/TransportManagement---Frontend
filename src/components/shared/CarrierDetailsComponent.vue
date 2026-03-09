@@ -12,6 +12,7 @@ import { useCarrierStore } from '@/stores/carrier'
 import { useCarriers } from '@/stores/carriers'
 import BigTitle from './TextPieces/BigTitle.vue'
 import { useVehicles } from '@/stores/vehicle'
+import ErrorMessageComponent from './ErrorMessageComponent.vue'
 
 onMounted(async()=>{
   await carriers.getCarriers();
@@ -27,6 +28,7 @@ const newCarrierDialogVisibility = ref(false)
 const newPlateDialogVisibility = ref(false)
 const newContactDialogVisibility = ref(false)
 const currentCarrierNumber = ref(1);
+const carrierInViesError = ref(false);
 
 const carrierFiedls = [
   { name: 'Carrier' },
@@ -182,6 +184,21 @@ const setInfoForUpdates = (value: string) =>{
     }
   })
 }
+
+const confirmCarrierInVies = async()=>{
+
+  if(await carrier.getViesData()===false){
+    carrierInViesError.value=true;
+  }
+  else{
+    carrierInViesError.value=false;
+    newCarrierDialogVisibility.value=false;
+    order.currentCarrier.carrierName = carrier.fiscalName;
+    order.currentCarrier.contact = '';
+    order.currentCarrier.plateNumber = '';
+  }
+  console.log(carrierInViesError.value);
+}
 </script>
 <template>
   <div class="mx-4 bg-blue-300 flex flex-row justify-between">
@@ -252,9 +269,12 @@ const setInfoForUpdates = (value: string) =>{
     </div>
   </div>
   <el-dialog v-model="newCarrierDialogVisibility">
-    <div class="flex flex-row items-center justify-between">
+    <div class="flex flex-row items-center justify-between" @close="carrierInViesError=false">
       <BigTitle :text="'Add New Carrier'"/>
-      <el-button @click="carrier.getViesData" type="primary">Validate Vat Code</el-button>
+      <div class="flex flex-row items-center gap-4">
+        <ErrorMessageComponent :name="'Error retrieving company data'" v-if="carrierInViesError"/>
+        <el-button @click="confirmCarrierInVies" type="primary">Validate Vat Code</el-button>
+      </div>
     </div>
     <AddNewCarrierComponent />
   </el-dialog>

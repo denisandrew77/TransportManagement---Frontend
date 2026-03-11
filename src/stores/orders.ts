@@ -64,6 +64,19 @@ export const useOrders = defineStore("Orders", {
       });
       return orders;
     },
+    async updateOrderStatus(orderNumber: number, newStatus: object){
+      const token = localStorage.getItem("token");
+      await api.put("/updateOrderStatus",{
+        orderNumber: orderNumber,
+        newStatus: newStatus,
+      },{
+        headers:{
+          'Authorization': token
+        }
+      }).then((response)=>{
+        console.log(response.data.message);
+      });
+    },
     platesToStringArray(carriers: carrierDbData[]): string[]{
         const plates: string[] = [];
         carriers.forEach((carrier)=>{
@@ -97,11 +110,14 @@ export const useOrders = defineStore("Orders", {
               client: order.clientName,
               loading: [order.loadingCountry + " - " + order.loadingPostalCode + " - " + order.loadingCity, order.loadingTime+ " / "+ order.loadingDate],
               delivery: [order.deliveryCountry + " - " + order.deliveryPostalCode + " - " + order.deliveryCity, order.deliveryTime+ " / "+ order.deliveryDate],
-              status: "N/A",
+              status: order.currentStatus,
               info: this.observationsForUpdatesToStringArray(order.carriers)})
           })
         }
         return transformedOrders;
-    }
+    },
+    fillOrderDat(order: ordersDbData) {
+      //this.orders.find((o) => o.orderNumber === order.orderNumber)!.client = order.clientName;
+    },
   }
-})
+});

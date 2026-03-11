@@ -1,3 +1,5 @@
+import type { statusDbData } from "../dbData/statusDbData";
+
 export interface orderTableColumn{
   orderNumber: number,
   plateNumber: string[],
@@ -6,6 +8,6 @@ export interface orderTableColumn{
   client: string,
   loading: string[],
   delivery: string[],
-  status: string,
+  status: statusDbData,
   info: string[],
 }

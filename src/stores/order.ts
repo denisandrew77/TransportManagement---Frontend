@@ -211,8 +211,5 @@ export const useOrder = defineStore('orderStore', {
         this.finalPrice.totalCarriersPrice += carrier.totalCarrierPrice;
       });
     },
-    calculateProfit(){
-
-    }
   }
 })

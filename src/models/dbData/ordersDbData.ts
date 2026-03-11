@@ -1,10 +1,12 @@
 import type { carrierDbData } from "./carrierDbData";
 import type { goodsDbData } from "./goodsDbData";
+import type { statusDbData } from "./statusDbData";
 
 export interface ordersDbData{
   clientName: string,
   clientRefference: string,
   carriers: carrierDbData[],
+  currentStatus: statusDbData,
   goods: goodsDbData[],
   dateCreated: string,
   deliveryAddress: string,
@@ -25,5 +27,7 @@ export interface ordersDbData{
   loadingPostalCode: string,
   loadingRefferences: string,
   loadingTime: string,
-  orderNumber: number
+  orderNumber: number,
+  status: string,
+  statusChangeDate: string,
 }

@@ -5,6 +5,7 @@ import { onMounted, ref } from 'vue';
 import { useOrders } from '@/stores/orders';
 import { useOrder } from '@/stores/order';
 import type { orderTableColumn } from '@/models/UI-related/ordersTableColumns';
+import DateRangeSelectorComponent from '../shared/Selectors/DateRangeSelectorComponent.vue';
 
 const router = useRouter();
 const orders = useOrders();
@@ -17,21 +18,16 @@ const navigate = ()=>{
 }
 
 onMounted(async ()=>{
-  await orders.getOrders();
+  orders.orders = await orders.getOrdersByDate(new Date());
   tableOrders.value = orders.orders;
 });
-tableOrders.value = orders.orders;
 const selectedDate = ref([]);
 const orderSearchValue = ref("");
 const orderSearchValueByNumber = ref("");
-
-/*const filterOrders = ()=>{
-  tableOrders.value = orders.orders;
-  tableOrders.value = tableOrders.value.filter((order)=>order.orderNumber===Number(orderSearchValue.value));
-  if(orderSearchValue.value===""){
-    tableOrders.value = orders.orders;
-  }
-}*/
+const dateRange = ref({
+  from: new Date(),
+  to: new Date()
+});
 
 const findAllByText = async ()=>{
   tableOrders.value = await orders.getOrdersByTextFound(orderSearchValue.value);
@@ -204,20 +200,17 @@ const filterOrdersByDate = () =>{
 const findAllByOrderNumber = async ()=>{
   tableOrders.value = await orders.getOrdersByOrderNumber(Number(orderSearchValueByNumber.value));
 }
+
+const getOrdersByDate = async (dateRange: { from: Date, to: Date })=>{
+  tableOrders.value = await orders.getOrdersByDate(dateRange.from);
+}
 </script>
 <template>
   <div class="w-full h-screen p-4 bg-gray-300">
     <div class="bg-white rounded-lg shadow-lg h-full overflow-hidden">
       <div class="p-4 border-b border-gray-200 flex flex-row items-center gap-4 mx-6">
-        <div class="w-90">
-           <el-date-picker
-          v-model="selectedDate"
-          type="daterange"
-          range-separator="To"
-          start-placeholder="Start date"
-          end-placeholder="End date"
-          @change="filterOrdersByDate"
-        />
+        <div class="w-80">
+          <DateRangeSelectorComponent @dateUpdate="getOrdersByDate"/>
         </div>
         <el-button type="primary" @click="navigate">
           <div class="flex flex-row gap-2">
@@ -263,6 +256,7 @@ const findAllByOrderNumber = async ()=>{
           @deliveryCityValueChange="filterOrdersByDeliveryCity"
           @deliveryPostalCodeValueChange="filterOrdersByDeliveryPostalCode"
           @statusValueChange="filterOrdersByStatus"
+          @statusUpdate="getOrdersByDate(dateRange)"
         />
       </div>
     </div>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { orderTableColumn } from '@/models/UI-related/ordersTableColumns';
+import StatusChangeDialog from '../Dialogs/StatusChangeDialog.vue';
 import { ref } from 'vue';
 
 defineProps<{
@@ -18,6 +19,7 @@ const emit = defineEmits<{
   (e:"deliveryPostalCodeValueChange", value: string): void
   (e:"deliveryCityValueChange", value: string): void
   (e:"statusValueChange", value: string): void
+  (e:"statusUpdate", value: void): void
 }>();
 
 const searchValues = ref({
@@ -36,7 +38,14 @@ const searchValues = ref({
     city: "",
   },
   status: ""
-})
+});
+
+const dialogVisible = ref(false);
+const selectedOrderNumber = ref<number>(0);
+const closeAndGetOrders = ()=>{
+  dialogVisible.value = false;
+  emit("statusUpdate");
+}
 </script>
 <template>
   <div class="px-10 pt-4">
@@ -195,9 +204,11 @@ const searchValues = ref({
           </div>
         </template>
         <template #default="{row}">
-          <div class="text-lg">
-            {{ row.status }}
-          </div>
+          <button @click="dialogVisible = true; selectedOrderNumber=row.orderNumber" class="w-full h-20">
+            <div class="text-lg">
+              {{ row.status.currentStatus }}
+            </div>
+          </button>
         </template>
       </el-table-column>
 
@@ -215,6 +226,7 @@ const searchValues = ref({
         </template>
       </el-table-column>
     </el-table>
+    <StatusChangeDialog :dialogVisibility="dialogVisible" @closed="closeAndGetOrders" :orderNumber="selectedOrderNumber"/>
   </div>
 </template>
 

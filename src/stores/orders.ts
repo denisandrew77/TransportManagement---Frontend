@@ -77,6 +77,20 @@ export const useOrders = defineStore("Orders", {
         console.log(response.data.message);
       });
     },
+    async getOrderByOrderNumber(orderNumber: number): Promise<ordersDbData>{
+      const token = localStorage.getItem("token");
+      const order = await api.get("/getOrderByOrderNumber",{
+        params:{
+          orderNumber: orderNumber
+        },
+        headers:{
+          'Authorization': token
+        }
+      }).then((response)=>{
+        return response.data.order;
+      });
+      return order;
+    },
     platesToStringArray(carriers: carrierDbData[]): string[]{
         const plates: string[] = [];
         carriers.forEach((carrier)=>{
@@ -115,9 +129,6 @@ export const useOrders = defineStore("Orders", {
           })
         }
         return transformedOrders;
-    },
-    fillOrderDat(order: ordersDbData) {
-      //this.orders.find((o) => o.orderNumber === order.orderNumber)!.client = order.clientName;
     },
   }
 });

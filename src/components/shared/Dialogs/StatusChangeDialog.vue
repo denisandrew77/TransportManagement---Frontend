@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { useOrder } from '@/stores/order';
 import { useOrders } from '@/stores/orders';
 import { nextTick, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
+const orderObject = useOrder();
 const orders = useOrders();
+const router = useRouter();
 const props = defineProps<{
   dialogVisibility: boolean
   orderNumber: number
@@ -142,7 +146,12 @@ const saveAndClose = async () => {
 };
 
 const editOrder = async()=>{
-
+  const order = await orders.getOrderByOrderNumber(props.orderNumber);
+  if(order){
+    orderObject.fillOrderDetails(order);
+  }
+  emit('closed');
+  router.push({name: 'NewOrder', params: {state: 'edit'}});
 }
 </script>
 

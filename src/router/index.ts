@@ -31,7 +31,7 @@ const router = createRouter({
       }
     },
     {
-      path: '/newOrder',
+      path: '/newOrder/:state?',
       name: 'NewOrder',
       component: NewOrderComponent,
       meta: {
@@ -93,7 +93,7 @@ const router = createRouter({
       meta:{
         requiresAuth: true
       }
-    }
+    },
     ],
 });
 

@@ -7,14 +7,17 @@ import { useOrder } from '@/stores/order'
 import { onMounted, ref } from 'vue'
 import UnCompletedFieldsDialog from './Dialogs/UnCompletedFieldsDialog.vue'
 import { useClients } from '@/stores/clients'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 onMounted(async ()=>{
-  await order.setNewOrderNumber();
+  if(route.params.state !== 'edit'){
+    await order.setNewOrderNumber();
+  }
   await clients.getClients();
 })
 
-const order = useOrder()
+const route = useRoute();
+const order = useOrder();
 const clients = useClients();
 const router = useRouter();
 

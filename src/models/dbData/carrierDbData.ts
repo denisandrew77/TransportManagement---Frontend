@@ -7,5 +7,10 @@ export interface carrierDbData{
   obervationsForOrder: string,
   observationsForUpdates: string,
   orderNumber: number,
-  plateNumber: string
+  plateNumber: string,
+  highways: number,
+  waiting: number,
+  hotel: number,
+  carrierPrice: number,
+  totalCarrierPrice: number,
 }

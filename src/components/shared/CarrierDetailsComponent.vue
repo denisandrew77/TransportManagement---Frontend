@@ -250,13 +250,13 @@ const confirmCarrierInVies = async()=>{
     <div class="flex flex-col mt-4 gap-2.5 ml-5">
       <button @click="newCarrierDialogVisibility = true"
         class="px-2.5 py-1.5 rounded-full bg-blue-400 active:bg-blue-600">
-        <i class="bi bi-plus-lg text-white !font-extrabold"></i>
+        <i class="bi bi-plus-lg text-white font-extrabold!"></i>
       </button>
       <button @click="newContactDialogVisibility = true" class="px-2.5 py-1.5 rounded-full bg-blue-400 active:bg-blue-600">
-        <i class="bi bi-plus-lg text-white !font-extrabold"></i>
+        <i class="bi bi-plus-lg text-white font-extrabold!"></i>
       </button>
       <button @click="newPlateDialogVisibility = true" class="px-2.5 py-1.5 rounded-full bg-blue-400 active:bg-blue-600">
-        <i class="bi bi-plus-lg text-white !font-extrabold"></i>
+        <i class="bi bi-plus-lg text-white font-extrabold!"></i>
       </button>
     </div>
     </div>

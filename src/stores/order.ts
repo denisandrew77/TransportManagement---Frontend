@@ -209,6 +209,9 @@ export const useOrder = defineStore('orderStore', {
         this.finalPrice.totalCarriersPrice += carrier.totalCarrierPrice;
       });
     },
+    setCurrentCarrier(carrier: typeof this.currentCarrier){
+      this.currentCarrier = carrier;
+    },
     fillOrderDetails(order: ordersDbData){
       this.orderNumber = order.orderNumber;
       this.client = order.clientName;

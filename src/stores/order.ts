@@ -1,5 +1,5 @@
-import type { carrierDetailsForOrder } from '@/models/cargo-related/carrierForOrder';
 import type { cargoOrder } from '@/models/cargo-related/order'
+import type { ordersDbData } from '@/models/dbData/ordersDbData';
 import { api } from '@/services/api';
 import { defineStore } from 'pinia'
 export const useOrder = defineStore('orderStore', {
@@ -121,9 +121,7 @@ export const useOrder = defineStore('orderStore', {
       }
       else return false
     },
-    setCurrentCarrier(carrier: carrierDetailsForOrder){
-      this.currentCarrier = carrier;
-    },
+
     resetFields(){
       this.orderNumber = 0;
       this.client = '';
@@ -211,5 +209,64 @@ export const useOrder = defineStore('orderStore', {
         this.finalPrice.totalCarriersPrice += carrier.totalCarrierPrice;
       });
     },
+    fillOrderDetails(order: ordersDbData){
+      this.orderNumber = order.orderNumber;
+      this.client = order.clientName;
+      this.clientRefference = order.clientRefference;
+      this.finalPrice = {
+        totalCarriersPrice: order.totalCarriersPrice,
+        clientPrice: order.clientPrice,
+      }
+      this.loading = {
+        name: order.loadingName,
+        address: order.loadingAddress,
+        postalCode: order.loadingPostalCode,
+        city: order.loadingCity,
+        country: order.loadingCountry,
+        refferences: order.loadingRefferences,
+        contacts: order.loadingContacts,
+        date: order.loadingDate,
+        time: order.loadingTime,
+      };
+      this.delivery = {
+        name: order.deliveryName,
+        address: order.deliveryAddress,
+        postalCode: order.deliveryPostalCode,
+        city: order.deliveryCity,
+        country: order.deliveryCountry,
+        refferences: order.deliveryRefferences,
+        contacts: order.deliveryContacts,
+        date: order.deliveryDate,
+        time: order.deliveryTime,
+      };
+      this.goods = order.goods.map((orderGood) => ({
+        type: orderGood.goodsType,
+        number: orderGood.goodsNumber,
+        length: orderGood.goodsLength,
+        width: orderGood.goodsWidth,
+        height: orderGood.goodsHeight,
+        weight: orderGood.goodsWeight,
+        stack: Boolean(orderGood.goodsStack),
+      }));
+      this.carriers = order.carriers.map((orderCarrier, index) => ({
+        number: index + 1,
+        invoice: orderCarrier.invoiceNumber,
+        carrierName: orderCarrier.carrierName,
+        contact: orderCarrier.contacts,
+        plateNumber: orderCarrier.plateNumber,
+        driverName: orderCarrier.driverName,
+        driverPhone: orderCarrier.driverPhoneNumber,
+        additionalInfoForOrder: orderCarrier.obervationsForOrder,
+        additionalInfoForUpdates: orderCarrier.observationsForUpdates,
+        highways: Number(orderCarrier.highways),
+        waiting: Number(orderCarrier.waiting),
+        hotel: Number(orderCarrier.hotel),
+        carrierPrice: Number(orderCarrier.carrierPrice),
+        totalCarrierPrice: Number(orderCarrier.totalCarrierPrice),
+      }));
+      if (this.carriers.length > 0) {
+        this.currentCarrier = { ...this.carriers[0] } as typeof this.currentCarrier;
+      }
+    }
   }
 })

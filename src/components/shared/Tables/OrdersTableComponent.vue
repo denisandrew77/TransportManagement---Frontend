@@ -206,7 +206,7 @@ const closeAndGetOrders = ()=>{
         <template #default="{row}">
           <button @click="dialogVisible = true; selectedOrderNumber=row.orderNumber" class="w-full h-20">
             <div class="text-lg">
-              {{ row.status.currentStatus }}
+              {{ row.currentStatus }}
             </div>
           </button>
         </template>

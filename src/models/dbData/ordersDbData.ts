@@ -31,5 +31,5 @@ export interface ordersDbData{
   status: string,
   statusChangeDate: string,
   clientPrice: number,
-  totalCarriersPrice: number,
+  totalPriceCarriers: number,
 }

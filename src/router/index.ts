@@ -10,6 +10,7 @@ import NewClientPage from '@/components/pages/NewClientPage.vue';
 import WelcomePage from '@/components/pages/WelcomePage.vue';
 import InvoicesPage from '@/components/pages/InvoicesPage.vue';
 import SettingPage from '@/components/pages/SettingPage.vue';
+import AddInvoicePage from '@/components/pages/AddInvoicePage.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -90,6 +91,14 @@ const router = createRouter({
       path: '/settings',
       name: 'SettingsPage',
       component: SettingPage,
+      meta:{
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/addInvoice',
+      name: 'AddInvoicePage',
+      component: AddInvoicePage,
       meta:{
         requiresAuth: true
       }

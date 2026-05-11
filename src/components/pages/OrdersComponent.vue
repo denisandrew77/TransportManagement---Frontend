@@ -212,7 +212,8 @@ const getOrdersByDate = async (dateRange: { from: Date, to: Date })=>{
         <div class="w-80">
           <DateRangeSelectorComponent @dateUpdate="getOrdersByDate"/>
         </div>
-        <el-button type="primary" @click="navigate">
+        <div class="pr-3">
+          <el-button type="primary" @click="navigate">
           <div class="flex flex-row gap-2">
             <div>
             <i class="bi bi-plus-lg"></i>
@@ -222,8 +223,8 @@ const getOrdersByDate = async (dateRange: { from: Date, to: Date })=>{
             </div>
           </div>
         </el-button>
-        <div class="w-90 flex flex-row items-center gap-3">
-          <span>Search</span>
+        </div>
+        <div class="w-90 flex flex-row items-center gap-3 bg-blue-700 rounded-lg h-15 py-3 px-5">
           <el-input v-model="orderSearchValue"/>
           <el-button type="primary" @click="findAllByText">
             <div class="flex flex-row gap-2">
@@ -232,7 +233,7 @@ const getOrdersByDate = async (dateRange: { from: Date, to: Date })=>{
             </div
           ></el-button>
         </div>
-        <div class="w-90 flex flex-row items-center gap-3 bg-blue-900 rounded-lg h-15 py-3 px-5">
+        <div class="w-90 flex flex-row items-center gap-3 bg-blue-700 rounded-lg h-15 py-3 px-5">
           <el-input v-model="orderSearchValueByNumber"/>
           <el-button type="primary" @click="findAllByOrderNumber">
             <div class="flex flex-row gap-2">

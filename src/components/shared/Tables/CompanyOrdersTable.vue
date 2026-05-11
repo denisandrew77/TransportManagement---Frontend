@@ -3,7 +3,8 @@ import { h } from 'vue';
 import type { invoiceItem } from '@/models/invoice-related/invoiceItem';
 
 const props = defineProps<{
-  orders: invoiceItem[]
+  orders: invoiceItem[],
+  client: boolean
 }>();
 
 const emit = defineEmits<{
@@ -47,12 +48,12 @@ function getSummaries({ columns }: { columns: any[] }) {
         {{ scope.row.netCostAmountEuro }}
       </template>
     </el-table-column>
-    <el-table-column prop="vatPercentage" label="VAT %" min-width="100" sortable align="center">
+    <el-table-column prop="vatPercentage" label="VAT %" min-width="100" sortable align="center" v-if="props.client">
       <template #default="scope">
         {{ scope.row.vatPercentage }}%
       </template>
     </el-table-column>
-    <el-table-column prop="grossCostAmountEuro" label="Gross (€)" min-width="120" sortable align="center" fixed="right">
+    <el-table-column prop="grossCostAmountEuro" label="Gross (€)" min-width="120" sortable align="center" fixed="right" v-if="props.client">
       <template #default="scope">
         {{ scope.row.grossCostAmountEuro }}
       </template>

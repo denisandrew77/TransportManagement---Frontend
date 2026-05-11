@@ -33,7 +33,7 @@ function removeGood(index: number) {
 const transportOrder = useOrder()
 </script>
 <template>
-  <div class="rounded-md bg-white m-4 shadow-2xl relative w-1/3">
+  <div class="rounded-md bg-white m-4 shadow-2xl relative w-1/3 h-1/4">
     <div class="font-bold text-[17px] text-center pb-2.5 pt-2.5 px-4 align-middle bg-blue-500 text-white">
       Goods
     </div>
@@ -41,30 +41,43 @@ const transportOrder = useOrder()
       @click="addGood">
       <i class="bi bi-plus-lg text-white !font-extrabold"></i>
     </button>
-    <div class="flex flex-row justify-around bg-blue-200">
-      <div v-for="reference in list" class="lg:py-2 flex">
+    <div class="grid justify-items-center grid-cols-8 bg-blue-200">
+      <div v-for="reference in list" class="lg:py-2 ">
         {{ reference.name }}
       </div>
       <div></div>
     </div>
-    <div class="flex flex-row justify-evenly relative" v-for="good in transportOrder.goods">
-      <el-select :class="tailwindDesign" v-model="good.type">
-        <el-option v-for="value in goodTypes" v-bind:key="value.name" :value="value.name">{{
-          value.name
-          }}</el-option>
-      </el-select>
-      <el-input :class="tailwindDesign" v-model="good.number"></el-input>
-      <el-input :class="tailwindDesign" v-model="good.length"></el-input>
-      <el-input :class="tailwindDesign" v-model="good.width"></el-input>
-      <el-input :class="tailwindDesign" v-model="good.height"></el-input>
-      <el-input :class="tailwindDesign" v-model="good.weight"></el-input>
-      <el-checkbox class="top-2 mx-4 pl-1 ml-10" size="large" v-model="good.stack" />
-      <div class="w-26"></div>
-      <button
-        class="bg-red-400 hover:bg-red-500 px-2 rounded-full mt-2 lg:absolute lg:right-3 lg:bottom-3 md:absolute md:right-1"
+    <div v-for="good in transportOrder.goods" class="grid grid-cols-8 gap-2 my-2 justify-items-center ml-2">
+      <div class="flex items-center justify-center h-full w-full">
+        <el-select v-model="good.type" >
+          <el-option v-for="value in goodTypes" v-bind:key="value.name" :value="value.name">{{value.name}}</el-option>
+        </el-select>
+      </div>
+      <div class="flex items-center justify-center h-full">
+        <el-input v-model="good.number"></el-input>
+      </div>
+      <div class="flex items-center justify-center h-full">
+        <el-input v-model="good.length"></el-input>
+      </div>
+      <div class="flex items-center justify-center h-full">
+        <el-input v-model="good.width"></el-input>
+      </div>
+      <div class="flex items-center justify-center h-full">
+        <el-input v-model="good.height"></el-input>
+      </div>
+      <div class="flex items-center justify-center h-full">
+        <el-input v-model="good.weight"></el-input>
+      </div>
+      <div class="flex items-center justify-center h-full">
+        <el-checkbox size="large" v-model="good.stack" />
+      </div>
+      <div class="flex items-center justify-center h-full">
+        <button
+        class="bg-red-400 hover:bg-red-500 px-2 rounded-full w-10 h-9"
         @click="() => removeGood(transportOrder.goods.indexOf(good))">
         <i class="bi bi-x text-2xl"></i>
       </button>
+      </div>
     </div>
   </div>
 </template>

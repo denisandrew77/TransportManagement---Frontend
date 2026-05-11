@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import InputWithText from '../Inputs/InputWithText.vue'
 import { useCarrierStore } from '@/stores/carrier'
 defineProps<{
   carrierName: string
@@ -8,23 +7,31 @@ const emit = defineEmits<{
   (e: "contactCreated", value: boolean): void
 }>()
 const carrier = useCarrierStore()
-const inputTitleList = {
-  contactName: 'Contact Name',
-  contactMobilePhone: 'Contact Mobile Phone',
-  contactEmail: 'Contact Email'
-}
 
-const createContact = async (carrierName: string)=>{
+const createContact = async (carrierName: string) => {
   await carrier.createCarrierContact(carrierName);
   await carrier.getCarrierContacts(carrierName);
-  emit('contactCreated',true);
+  emit('contactCreated', true);
 }
 </script>
 <template>
-  <div class="flex flex-row gap-4 relative h-29 mt-4">
-    <InputWithText :label="inputTitleList.contactName" v-model="carrier.contact.name"/>
-    <InputWithText :label="inputTitleList.contactMobilePhone" v-model="carrier.contact.phoneNumber"/>
-    <InputWithText :label="inputTitleList.contactEmail" v-model="carrier.contact.email"/>
-    <el-button @click="createContact(carrierName)" type="success" class="absolute right-0 bottom-0" size="large">Save</el-button>
+  <div class="w-full p-6 flex flex-col gap-8">
+    <div class="grid grid-cols-3 gap-x-6 gap-y-8">
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Contact Name</span>
+        <el-input v-model="carrier.contact.name" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Contact Mobile Phone</span>
+        <el-input v-model="carrier.contact.phoneNumber" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Contact Email</span>
+        <el-input v-model="carrier.contact.email" />
+      </div>
+    </div>
+    <div class="flex justify-end pt-4 border-t border-slate-200">
+      <el-button @click="createContact(carrierName)" type="success" size="large">Save</el-button>
+    </div>
   </div>
 </template>

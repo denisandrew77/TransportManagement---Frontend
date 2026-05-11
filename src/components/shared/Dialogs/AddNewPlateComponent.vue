@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import InputWithText from '../Inputs/InputWithText.vue'
-import NumberInputWithText from '../Inputs/NumberInputWithText.vue'
-import DatePickerComponent from '../Inputs/DatePickerComponent.vue'
 import { useVehicles } from '@/stores/vehicle'
 
 defineProps<{
@@ -14,71 +10,126 @@ const emit = defineEmits<{
 
 const vehicle = useVehicles()
 
-const inputTitleList = ref({
-  plateNumber: 'Plate number',
-  driverName: 'Driver Name',
-  driverPhoneNumber: 'Driver Phone',
-  status: 'Status',
-  loadWeight: 'Load weight',
-  totalLength: 'Total long',
-  insideLength: 'Inside long',
-  width: 'Width',
-  distanceBetweenWheels: 'Between the wheels',
-  insideHeight: 'Inside high',
-  totalHeight: 'Total high',
-  vehicleType: 'Type',
-  carrierType: 'Type of carrier',
-  personalPhoneNumber: 'Personal Phone',
-  goodsInsurance: 'Insurance goods',
-  obligateInspection: 'Obligate inspection',
-  weight: 'Weighted',
-  dkvDate: 'Dkv',
-  gesTransDate: 'Gestrans',
-  tarifApproachKms: 'Tarif Aproach kms',
-  tarrifLoadKms: 'Tarif Load kms',
-  tarifClosingKms: 'Tarif Closing kms',
-  registrationDate: 'Registration date',
-  totalKilometers: 'Kms',
-  date: 'Date',
-  vehicleInsurance: 'Vehicle Insurance',
-  tarif: 'Tarif'
-})
-
-const createVehicle = async (carrierName: string) =>{
+const createVehicle = async (carrierName: string) => {
   await vehicle.createVehicle(carrierName);
   await vehicle.getCarrierVehicles(carrierName);
-  emit('createdVehicle',true);
+  emit('createdVehicle', true);
 }
 </script>
 <template>
-<div class="mt-3 grid grid-cols-6 gap-4 relative mx-auto">
-  <InputWithText :label="inputTitleList.plateNumber" v-model="vehicle.plateNumber" />
-  <InputWithText :label="inputTitleList.driverName" v-model="vehicle.driverName" />
-  <InputWithText :label="inputTitleList.driverPhoneNumber" v-model="vehicle.driverPhoneNumber" />
-  <InputWithText :label="inputTitleList.status" v-model="vehicle.status" />
-  <NumberInputWithText :label="inputTitleList.loadWeight" v-model="vehicle.loadWeight" />
-  <NumberInputWithText :label="inputTitleList.totalLength" v-model="vehicle.totalLength" />
-  <NumberInputWithText :label="inputTitleList.insideLength" v-model="vehicle.insideLength" />
-  <NumberInputWithText :label="inputTitleList.width" v-model="vehicle.width" />
-  <NumberInputWithText :label="inputTitleList.distanceBetweenWheels" v-model="vehicle.distanceBetweenWheels" />
-  <NumberInputWithText :label="inputTitleList.insideHeight" v-model="vehicle.insideHeight" />
-  <NumberInputWithText :label="inputTitleList.totalHeight" v-model="vehicle.totalHeight" />
-  <InputWithText :label="inputTitleList.vehicleType" v-model="vehicle.vehicleType" />
-  <InputWithText :label="inputTitleList.carrierType" v-model="vehicle.carrierType" />
-  <InputWithText :label="inputTitleList.personalPhoneNumber" v-model="vehicle.personalPhoneNumber" />
-  <DatePickerComponent :label="inputTitleList.goodsInsurance" v-model="vehicle.goodsInsurance" />
-  <DatePickerComponent :label="inputTitleList.obligateInspection" v-model="vehicle.obligateInspection" />
-  <NumberInputWithText :label="inputTitleList.weight" v-model="vehicle.weight" />
-  <DatePickerComponent :label="inputTitleList.dkvDate" v-model="vehicle.dkvDate" />
-  <DatePickerComponent :label="inputTitleList.gesTransDate" v-model="vehicle.gesTransDate" />
-  <NumberInputWithText :label="inputTitleList.tarifApproachKms" v-model="vehicle.tarifApproachKms" />
-  <NumberInputWithText :label="inputTitleList.tarrifLoadKms" v-model="vehicle.tarrifLoadKms" />
-  <NumberInputWithText :label="inputTitleList.tarifClosingKms" v-model="vehicle.tarifClosingKms" />
-  <DatePickerComponent :label="inputTitleList.registrationDate" v-model="vehicle.registrationDate" />
-  <NumberInputWithText :label="inputTitleList.totalKilometers" v-model="vehicle.totalKilometers" />
-  <DatePickerComponent :label="inputTitleList.date" v-model="vehicle.date" />
-  <DatePickerComponent :label="inputTitleList.vehicleInsurance" v-model="vehicle.vehicleInsurance" />
-  <NumberInputWithText :label="inputTitleList.tarif" v-model="vehicle.tarif" />
-  <el-button @click="createVehicle(carrierName)" type="success" class="absolute right-3 bottom-0" size="large">Save</el-button>
-</div>
+  <div class="w-full p-6 flex flex-col gap-8">
+    <div class="grid grid-cols-6 gap-x-6 gap-y-8">
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Plate number</span>
+        <el-input v-model="vehicle.plateNumber" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Driver Name</span>
+        <el-input v-model="vehicle.driverName" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Driver Phone</span>
+        <el-input v-model="vehicle.driverPhoneNumber" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Status</span>
+        <el-input v-model="vehicle.status" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Load weight</span>
+        <el-input-number v-model="vehicle.loadWeight" controls-position="right" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Total long</span>
+        <el-input-number v-model="vehicle.totalLength" controls-position="right" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Inside long</span>
+        <el-input-number v-model="vehicle.insideLength" controls-position="right" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Width</span>
+        <el-input-number v-model="vehicle.width" controls-position="right" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Between the wheels</span>
+        <el-input-number v-model="vehicle.distanceBetweenWheels" controls-position="right" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Inside high</span>
+        <el-input-number v-model="vehicle.insideHeight" controls-position="right" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Total high</span>
+        <el-input-number v-model="vehicle.totalHeight" controls-position="right" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Type</span>
+        <el-input v-model="vehicle.vehicleType" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Type of carrier</span>
+        <el-input v-model="vehicle.carrierType" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Personal Phone</span>
+        <el-input v-model="vehicle.personalPhoneNumber" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Insurance goods</span>
+        <el-date-picker v-model="vehicle.goodsInsurance" type="date" placeholder="Select date" style="width: 100%" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Obligate inspection</span>
+        <el-date-picker v-model="vehicle.obligateInspection" type="date" placeholder="Select date" style="width: 100%" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Weighted</span>
+        <el-input-number v-model="vehicle.weight" controls-position="right" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Dkv</span>
+        <el-date-picker v-model="vehicle.dkvDate" type="date" placeholder="Select date" style="width: 100%" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Gestrans</span>
+        <el-date-picker v-model="vehicle.gesTransDate" type="date" placeholder="Select date" style="width: 100%" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Tarif Aproach kms</span>
+        <el-input-number v-model="vehicle.tarifApproachKms" controls-position="right" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Tarif Load kms</span>
+        <el-input-number v-model="vehicle.tarrifLoadKms" controls-position="right" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Tarif Closing kms</span>
+        <el-input-number v-model="vehicle.tarifClosingKms" controls-position="right" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Registration date</span>
+        <el-date-picker v-model="vehicle.registrationDate" type="date" placeholder="Select date" style="width: 100%" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Kms</span>
+        <el-input-number v-model="vehicle.totalKilometers" controls-position="right" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Date</span>
+        <el-date-picker v-model="vehicle.date" type="date" placeholder="Select date" style="width: 100%" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Vehicle Insurance</span>
+        <el-date-picker v-model="vehicle.vehicleInsurance" type="date" placeholder="Select date" style="width: 100%" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm text-gray-500">Tarif</span>
+        <el-input-number v-model="vehicle.tarif" controls-position="right" />
+      </div>
+    </div>
+    <div class="flex justify-end pt-4 border-t border-slate-200">
+      <el-button @click="createVehicle(carrierName)" type="success" size="large">Save</el-button>
+    </div>
+  </div>
 </template>

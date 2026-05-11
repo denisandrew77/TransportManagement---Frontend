@@ -9,7 +9,7 @@ const indexList: Ref<string[], string[]> = ref(
   "Date/Time"]);
 </script>
 <template>
-  <div class="flex flex-col gap-4 mt-1 ml-5">
+  <div class="flex flex-col gap-4 mt-1 ml-10">
     <div v-for="element in indexList">{{ element }}</div>
   </div>
 </template>

@@ -9,6 +9,7 @@ import NewInvoiceComponent from '../shared/NewInvoiceComponent.vue';
 import CarrierCard from '../shared/Cards/CarrierCard.vue';
 import { useInvoiceItems } from '@/stores/invoiceItems';
 import CompanyOrdersTable from '../shared/Tables/CompanyOrdersTable.vue';
+import EssentialCarrierInfoCard from '../shared/Cards/EssentialCarrierInfoCard.vue';
 import router from '@/router';
 
 const toFromList = [
@@ -121,8 +122,12 @@ const createInvoice = async () => {
           <NewInvoiceComponent/>
         </div>
         <el-divider v-if="evaluatedExpressions.invoiceFieldsOpen" class="mx-12" />
-        <div class="mx-12 mb-4">
-          <CompanyOrdersTable :orders="invoiceItems.invoiceItemList" v-if="evaluatedExpressions.invoiceFieldsOpen" @update:orders="setSelectedOrder"/>
+        <div class="mx-12 mb-4" v-if="selectedToFrom==='Client'">
+          <CompanyOrdersTable :orders="invoiceItems.invoiceItemList" v-if="evaluatedExpressions.invoiceFieldsOpen" @update:orders="setSelectedOrder" :client="true"/>
+        </div>
+        <div class="mx-12 mb-4 flex flex-row gap-8 items-start" v-if="selectedToFrom==='Carrier'">
+          <CompanyOrdersTable :orders="invoiceItems.invoiceItemList" v-if="evaluatedExpressions.invoiceFieldsOpen" @update:orders="setSelectedOrder" :client="false"/>
+          <EssentialCarrierInfoCard :carrierName="invoice.companyName" v-if="evaluatedExpressions.invoiceFieldsOpen"/>
         </div>
         <div class="mx-13 mt-7" v-if="evaluatedExpressions.invoiceFieldsOpen">
           <el-button type="success" @click="createInvoice">Add Invoice</el-button>

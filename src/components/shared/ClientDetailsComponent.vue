@@ -70,7 +70,7 @@ const dialogVisibility = ref(false);
       </div>
     </div>
     <div class="bg-gray-200 p-2 flex flex-col">
-      <div class="flex flex-row gap-15">
+      <div class="flex flex-row gap-30">
         <IndexListComponent  class="mt-7"/>
         <div class="flex flex-col items-center">
           <MediumTitle :text="'Sender'" />
@@ -80,7 +80,7 @@ const dialogVisibility = ref(false);
           <MediumTitle :text="'Receiver'" />
           <LoadingDetailsComponent v-model="order.delivery" />
         </div>
-        <GoodsComponent />
+          <GoodsComponent />
       </div>
     </div>
   </div>

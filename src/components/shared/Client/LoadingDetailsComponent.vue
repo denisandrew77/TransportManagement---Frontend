@@ -49,22 +49,24 @@ const setTime = (value: string) => {
 }
 </script>
 <template>
-  <div class="flex flex-col gap-2 w-80">
-    <SizedInputComponent :modelValue="modelValue.name" @update:modelValue="setName" class="w-80"/>
-    <SizedInputComponent :modelValue="modelValue.address" @update:modelValue="setAddress" class="w-80"/>
+  <div class="flex flex-col gap-2 w-90">
+    <SizedInputComponent :modelValue="modelValue.name" @update:modelValue="setName" class="w-90"/>
+    <SizedInputComponent :modelValue="modelValue.address" @update:modelValue="setAddress" class="w-90"/>
     <div class="flex flex-row gap-2">
-      <SizedInputComponent :modelValue="modelValue.postalCode" @update:modelValue="setPostalCode" class="w-35" />
-      <SizedInputComponent :modelValue="modelValue.city" @update:modelValue="setCity" class="w-43" />
+      <SizedInputComponent :modelValue="modelValue.postalCode" @update:modelValue="setPostalCode" class="w-40" />
+      <SizedInputComponent :modelValue="modelValue.city" @update:modelValue="setCity" class="w-48" />
     </div>
     <div class="flex flex-row gap-2">
       <div class="w-full"><CountrySelector :modelValue="modelValue.country" @update:modelValue="setCountry"/></div>
       <div>Refs</div>
-      <SizedInputComponent :modelValue="modelValue.refferences" @update:modelValue="setReference" class="w-48" />
+      <SizedInputComponent :modelValue="modelValue.refferences" @update:modelValue="setReference" class="w-50" />
     </div>
-    <SizedInputComponent :modelValue="modelValue.contacts" @update:modelValue="setContact"  class="w-80"/>
+    <SizedInputComponent :modelValue="modelValue.contacts" @update:modelValue="setContact"  class="w-90"/>
     <div class="flex flex-row gap-2">
-      <el-date-picker :model-value="modelValue.date" @update:model-value="setDate"/>
-      <TimeInputComponent :modelValue="modelValue.time" @update:modelValue="setTime" class="w-14" />
+      <div class="w-70">
+        <el-date-picker :model-value="modelValue.date" @update:model-value="setDate"/>
+      </div>
+        <TimeInputComponent :modelValue="modelValue.time" @update:modelValue="setTime" />
     </div>
   </div>
 </template>

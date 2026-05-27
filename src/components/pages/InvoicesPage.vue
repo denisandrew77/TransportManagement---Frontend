@@ -2,15 +2,28 @@
 import { useRouter } from 'vue-router';
 import BigTitle from '../shared/TextPieces/BigTitle.vue';
 import { useInvoices } from '@/stores/invoices';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import InvoicesTable from '../shared/Tables/InvoicesTable.vue';
+import DeleteConfirmationDialog from '../shared/Dialogs/DeleteConfirmationDialog.vue';
 
 const router = useRouter();
 const invoices = useInvoices();
+const deleteDialogVisibility = ref(false);
 
 onMounted(async() => {
   await invoices.getInvoices();
 });
+
+const deleteInvoice = async (invoiceNumber: string | number) =>{
+  invoiceNumber = Number(invoiceNumber);
+  await invoices.deleteInvoice(invoiceNumber).then(
+    async ()=> { await invoices.getInvoices();}
+  );
+  deleteDialogVisibility.value=false;
+}
+const openDeleteDialog = ()=>{
+  deleteDialogVisibility.value=true;
+}
 </script>
 <template>
   <div class="w-full h-screen p-4 bg-gray-300">
@@ -22,8 +35,9 @@ onMounted(async() => {
         </el-button>
       </div>
       <div class="mx-12 mt-5">
-        <InvoicesTable :invoices="invoices.invoiceList" />
+        <InvoicesTable :invoices="invoices.invoiceList" @deleteRequest="openDeleteDialog"/>
       </div>
     </div>
   </div>
+  <DeleteConfirmationDialog v-model:visibility="deleteDialogVisibility" @deleteRequest="deleteInvoice" :currentCarrier="'this invoice'" :title="'Invoice'"/>
 </template>

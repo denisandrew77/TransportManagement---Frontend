@@ -2,6 +2,7 @@
 defineProps<{
   visibility: boolean
   currentCarrier: string
+  title: string
 }>()
 
 const emit = defineEmits<{
@@ -14,7 +15,7 @@ const emit = defineEmits<{
   <template #header>
     <div class="flex flex-row items-center gap-3">
       <i class="bi bi-exclamation-triangle-fill text-red-600 text-2xl"></i>
-      <span class="text-xl font-bold">Delete Carrier</span>
+      <span class="text-xl font-bold">Delete {{title}}</span>
     </div>
   </template>
   <div class="flex flex-col items-center gap-4">

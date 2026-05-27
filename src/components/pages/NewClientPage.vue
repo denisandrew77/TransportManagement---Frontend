@@ -3,14 +3,28 @@ import type { carrierTitles } from '@/models/UI-related/carrierTitles';
 import CompanyCreateComponent from '../shared/CompanyCreateComponent.vue';
 import BigTitle from '../shared/TextPieces/BigTitle.vue';
 import ErrorMessageComponent from '../shared/ErrorMessageComponent.vue';
+import UnCompletedFieldsDialog from '../shared/Dialogs/UnCompletedFieldsDialog.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useClient } from '@/stores/client';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const route = useRoute();
 const router = useRouter();
 const client = useClient();
 const viesError = ref(false);
+const missingFieldsDialogVisible = ref(false);
+
+onMounted(() => {
+  viesError.value = false;
+});
+
+const checkRequiredFields = (): boolean => {
+  if(!client.validateRequiredFields()) {
+    missingFieldsDialogVisible.value = true;
+    return false;
+  }
+  return true;
+};
 
 const inputTitleList: carrierTitles = {
   nif: 'NIF',
@@ -37,6 +51,9 @@ const createClient = async() =>{
   client.resetClientFields();
 }
 const executeCreateOrEdit = async()=>{
+  if(!checkRequiredFields()) return;
+
+  viesError.value = false;
   if(route.params.state==="edit"){
     await client.updateClient();
     router.push("/clients");
@@ -80,4 +97,5 @@ const handleModelUpdate = (updatedCarrier: any) => {
   <div class="w-full text-center mt-8" v-if="viesError">
     <ErrorMessageComponent :name="'Error retrieving company data'"/>
   </div>
+  <UnCompletedFieldsDialog v-model:visibility="missingFieldsDialogVisible"/>
 </template>

@@ -2,26 +2,23 @@
 import { ref } from 'vue';
 
 const dateRange = ref({
-  from: new Date(),
-  to: new Date()
+  selected: new Date(),
 });
 const moveDateFurther = ()=>{
-  const newFrom = new Date(dateRange.value.from);
-  const newTo = new Date(dateRange.value.to);
-  newFrom.setDate(newFrom.getDate()+1);
-  dateRange.value = { from: newFrom, to: newTo };
-  emit('dateUpdate', dateRange.value);
+  const date = new Date(dateRange.value.selected);
+  date.setDate(date.getDate()+1);
+  dateRange.value.selected = date;
+  emit('dateUpdate', dateRange.value.selected);
 }
 const moveDateBackwards = ()=>{
-  const newFrom = new Date(dateRange.value.from);
-  const newTo = new Date(dateRange.value.to);
-  newTo.setDate(newTo.getDate()-1);
-  dateRange.value = { from: newFrom, to: newTo };
-  emit('dateUpdate', dateRange.value);
+  const date = new Date(dateRange.value.selected);
+  date.setDate(date.getDate()-1);
+  dateRange.value.selected = date;
+  emit('dateUpdate', dateRange.value.selected);
 }
 
 const emit = defineEmits<{
-  (e: 'dateUpdate', value: { from: Date, to: Date }): void
+  (e: 'dateUpdate', value: Date): void
 }>();
 </script>
 <template>
@@ -30,9 +27,9 @@ const emit = defineEmits<{
       <i class="bi bi-arrow-left"></i>
     </el-button>
     <div class="flex flex-row gap-2 px-2 py-1 mx-2 border border-gray-500 rounded-md">
-      <el-text size="large">{{ dateRange.to.getDate() }}.{{ dateRange.to.getMonth()+1 }}.{{ dateRange.to.getFullYear() }}</el-text>
+      <el-text size="large">{{ dateRange.selected.getDate() }}.{{ dateRange.selected.getMonth()+1 }}.{{ dateRange.selected.getFullYear() }}</el-text>
       <i class="bi bi-arrow-right"></i>
-      <el-text size="large">{{ dateRange.from.getDate() }}.{{ dateRange.from.getMonth()+1 }}.{{ dateRange.from.getFullYear() }}</el-text>
+      <el-text size="large">{{ dateRange.selected.getDate() }}.{{ dateRange.selected.getMonth()+1 }}.{{ dateRange.selected.getFullYear() }}</el-text>
     </div>
     <el-button type="primary" @click="moveDateFurther">
       <i class="bi bi-arrow-right"></i>

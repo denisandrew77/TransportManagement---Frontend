@@ -218,7 +218,7 @@ const confirmCarrierInVies = async()=>{
       <el-button type="danger" class="mt-2 mr-4" @click="deleteCarrier">Delete Carrier</el-button>
     </div>
   </div>
-  <div class="bg-gray-200 mx-4 flex flex-row gap-30 pt-5 pl-8">
+  <div class="bg-gray-200 mx-4 flex flex-row gap-30 pt-5 pl-12">
     <div class="flex flex-row">
       <div class="flex flex-col gap-6 mt-5">
       <div v-for="element in carrierFiedls">

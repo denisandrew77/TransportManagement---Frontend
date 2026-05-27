@@ -46,20 +46,22 @@ const filterCompanies = () =>{
 }
 </script>
 <template>
-  <div class="w-full flex flex-col items-center mt-8 px-4">
-    <div class="w-full">
-      <div class="flex justify-between items-center mb-6 px-4">
+  <div class="w-full h-screen p-4 bg-gray-300">
+    <div class="bg-white rounded-lg shadow-lg h-full overflow-hidden flex flex-col">
+      <div class="p-4 border-b border-gray-200 flex flex-row items-center justify-between mx-9">
         <h1 class="text-3xl font-bold text-gray-800">Carriers</h1>
         <div class="flex flex-row items-center gap-4">
-          <span>Search</span>
-          <el-input v-model="searchingCarrierValue" @input="filterCompanies"/>
+          <span class="text-sm text-gray-600">Search</span>
+          <el-input v-model="searchingCarrierValue" @input="filterCompanies" placeholder="Filter by fiscal name" style="max-width: 300px"/>
           <el-button type="primary" size="large" @click="router.push('/newCarrier')">
             <i class="bi bi-plus-lg mr-2"></i>Add Carrier
           </el-button>
         </div>
       </div>
-      <CompaniesTable :carriers="carrierList" @editRequest="editCarrier" @deleteRequest="setCurrentCarrier"/>
+      <div class="mx-12 mt-5 flex-1">
+        <CompaniesTable :carriers="carrierList" @editRequest="editCarrier" @deleteRequest="setCurrentCarrier"/>
+      </div>
     </div>
   </div>
-  <DeleteConfirmationDialog v-model:visibility="dialogVisibility" :currentCarrier="currentCarrier" @deleteRequest="deleteCarrier"/>
+  <DeleteConfirmationDialog v-model:visibility="dialogVisibility" :currentCarrier="currentCarrier" @deleteRequest="deleteCarrier" :title="'Carrier'"/>
 </template>

@@ -6,32 +6,51 @@ import { useOrders } from '@/stores/orders';
 import { useOrder } from '@/stores/order';
 import type { orderTableColumn } from '@/models/UI-related/ordersTableColumns';
 import DateRangeSelectorComponent from '../shared/Selectors/DateRangeSelectorComponent.vue';
+import SearchOrderNumberDialog from '../shared/Dialogs/SearchOrderNumberDialog.vue';
 
 const router = useRouter();
 const orders = useOrders();
 const order = useOrder();
+const orderNumberSearchDialogVisible = ref(false);
 
 const tableOrders = ref([] as orderTableColumn[]);
+const selectedDate = ref<Date>(new Date());
+
 const navigate = ()=>{
   order.resetFields();
   router.push("/newOrder");
 }
 
 onMounted(async ()=>{
-  orders.orders = await orders.getOrdersByDate(new Date());
+  const today = new Date();
+  orders.orders = await orders.getOrdersByDate(today);
   tableOrders.value = orders.orders;
+  selectedDate.value = today;
 });
-const selectedDate = ref([]);
 const orderSearchValue = ref("");
-const orderSearchValueByNumber = ref("");
-const dateRange = ref({
-  from: new Date(),
-  to: new Date()
-});
+const orderNumberSearchValue = ref(0);
 
-const findAllByText = async ()=>{
-  tableOrders.value = await orders.getOrdersByTextFound(orderSearchValue.value);
-  console.log(tableOrders.value)
+
+const findAllByText = (value: string)=>{
+  tableOrders.value = orders.orders;
+  value = value.toLowerCase();
+  tableOrders.value = tableOrders.value.filter((order)=>{
+    let found = false;
+    order.plateNumber.forEach((plate)=>{plate=plate.toLowerCase(); if(plate.includes(value) && value!=="") {found=true;}})
+    order.carrier.forEach((carrier)=>{carrier=carrier.toLowerCase(); if(carrier.includes(value) && value!=="") {found=true;}})
+    if(order.clientNumber.toLowerCase().includes(value) && value!=="") {found=true;}
+    if(order.client.toLowerCase().includes(value) && value!=="") {found=true;}
+    if(order.loading[0]?.toLowerCase().includes(value) && value!=="") {found=true;}
+    if(order.delivery[0]?.toLowerCase().includes(value) && value!=="") {found=true;}
+    if(order.status!=null)
+    {
+      if(order.status.currentStatus?.toLowerCase().includes(value) && value!=="") {found=true;}
+    }
+    return found;
+  });
+  if(value===""){
+    tableOrders.value = orders.orders;
+  }
 }
 
 const filterOrdersByPlate = (value: string)=>{
@@ -48,7 +67,6 @@ const filterOrdersByPlate = (value: string)=>{
 }
 
 const filterOrdersByCarrier = (value: string)=>{
-  tableOrders.value = orders.orders;
   value = value.toLowerCase();
   tableOrders.value = tableOrders.value.filter((order)=>{
     let found = false;
@@ -61,7 +79,6 @@ const filterOrdersByCarrier = (value: string)=>{
 }
 
 const filterOrdersByClientNumber = (value: string)=>{
-  tableOrders.value = orders.orders;
   value = value.toLowerCase();
   tableOrders.value = tableOrders.value.filter((order)=>{
     return order.clientNumber.toLowerCase().includes(value) && value!=="";
@@ -72,7 +89,6 @@ const filterOrdersByClientNumber = (value: string)=>{
 }
 
 const filterOrdersByClient = (value: string)=>{
-  tableOrders.value = orders.orders;
   value = value.toLowerCase();
   tableOrders.value = tableOrders.value.filter((order)=>{
     return order.client.toLowerCase().includes(value) && value!=="";
@@ -83,7 +99,6 @@ const filterOrdersByClient = (value: string)=>{
 }
 
 const filterOrdersByLoadingCountry = (value: string)=>{
-  tableOrders.value = orders.orders;
   value = value.toLowerCase();
   tableOrders.value = tableOrders.value.filter((order)=>{
     if(order.loading[0]?.split("-")[0]?.toLowerCase().includes(value)){
@@ -96,7 +111,6 @@ const filterOrdersByLoadingCountry = (value: string)=>{
 }
 
 const filterOrdersByLoadingCity = (value: string)=>{
-  tableOrders.value = orders.orders;
   value = value.toLowerCase();
   tableOrders.value = tableOrders.value.filter((order)=>{
     if(order.loading[0]?.split("-")[2]?.toLowerCase().includes(value)){
@@ -109,7 +123,6 @@ const filterOrdersByLoadingCity = (value: string)=>{
 }
 
 const filterOrdersByLoadingPostalCode = (value: string)=>{
-  tableOrders.value = orders.orders;
   value = value.toLowerCase();
   tableOrders.value = tableOrders.value.filter((order)=>{
     if(order.loading[0]?.split("-")[1]?.toLowerCase().includes(value)){
@@ -122,7 +135,6 @@ const filterOrdersByLoadingPostalCode = (value: string)=>{
 }
 
 const filterOrdersByDeliveryCountry = (value: string)=>{
-  tableOrders.value = orders.orders;
   value = value.toLowerCase();
   tableOrders.value = tableOrders.value.filter((order)=>{
     if(order.delivery[0]?.split("-")[0]?.toLowerCase().includes(value)){
@@ -135,7 +147,6 @@ const filterOrdersByDeliveryCountry = (value: string)=>{
 }
 
 const filterOrdersByDeliveryCity = (value: string)=>{
-  tableOrders.value = orders.orders;
   value = value.toLowerCase();
   tableOrders.value = tableOrders.value.filter((order)=>{
     if(order.delivery[0]?.split("-")[2]?.toLowerCase().includes(value)){
@@ -148,7 +159,6 @@ const filterOrdersByDeliveryCity = (value: string)=>{
 }
 
 const filterOrdersByDeliveryPostalCode = (value: string)=>{
-  tableOrders.value = orders.orders;
   value = value.toLowerCase();
   tableOrders.value = tableOrders.value.filter((order)=>{
     if(order.delivery[0]?.split("-")[1]?.toLowerCase().includes(value)){
@@ -157,14 +167,14 @@ const filterOrdersByDeliveryPostalCode = (value: string)=>{
   });
   if(value===""){
     tableOrders.value = orders.orders;
+    console.log(orders.orders);
   }
 }
 
 const filterOrdersByStatus = (value: string)=>{
-  tableOrders.value = orders.orders;
   value = value.toLowerCase();
   tableOrders.value = tableOrders.value.filter((order)=>{
-    return order.status.toLowerCase().includes(value) && value!=="";
+    return order.status.currentStatus.toLowerCase().includes(value) && value!=="";
   });
   if(value===""){
     tableOrders.value = orders.orders;
@@ -172,20 +182,14 @@ const filterOrdersByStatus = (value: string)=>{
 }
 
 const filterOrdersByDate = () =>{
-  tableOrders.value = orders.orders;
-  let fromDate: Date, toDate : Date;
-  if(selectedDate.value!==null || selectedDate.value!==undefined){
-    fromDate = new Date(String(selectedDate?.value[0]));
-    toDate = new Date(String(selectedDate?.value[1]));
+  if(selectedDate.value){
+    const selectedDateObj = new Date(String(selectedDate.value));
     tableOrders.value = tableOrders.value.filter((order)=>{
       const loadingDate : Date = new Date(String(order.loading[1]?.split("/")[1]?.slice(1)));
       const deliveryDate : Date = new Date(String(order.delivery[1]?.split("/")[1]?.slice(1)));
-      if(fromDate.getDate()<=loadingDate.getDate() && fromDate.getDate()<=deliveryDate.getDate() &&
-          toDate.getDate()>=loadingDate.getDate() && toDate.getDate()>=deliveryDate.getDate() &&
-          fromDate.getMonth()<=loadingDate.getMonth() && fromDate.getMonth()<=deliveryDate.getMonth() &&
-          toDate.getMonth()>=loadingDate.getMonth() && toDate.getMonth()>=deliveryDate.getMonth() &&
-          fromDate.getFullYear()<=loadingDate.getFullYear() && fromDate.getFullYear()<=deliveryDate.getFullYear() &&
-          toDate.getFullYear()>=loadingDate.getFullYear() && toDate.getFullYear()>=deliveryDate.getFullYear()
+      if(selectedDateObj.getDate()===loadingDate.getDate() && selectedDateObj.getDate()===deliveryDate.getDate() &&
+          selectedDateObj.getMonth()===loadingDate.getMonth() && selectedDateObj.getMonth()===deliveryDate.getMonth() &&
+          selectedDateObj.getFullYear()===loadingDate.getFullYear() && selectedDateObj.getFullYear()===deliveryDate.getFullYear()
           ){
             return true
           }
@@ -197,50 +201,55 @@ const filterOrdersByDate = () =>{
     }
 }
 
-const findAllByOrderNumber = async ()=>{
-  tableOrders.value = await orders.getOrdersByOrderNumber(Number(orderSearchValueByNumber.value));
+
+const setValue = (searchOrderValue: number)=>{
+  orderNumberSearchValue.value=searchOrderValue;
 }
 
-const getOrdersByDate = async (dateRange: { from: Date, to: Date })=>{
-  tableOrders.value = await orders.getOrdersByDate(dateRange.from);
+const findByOrderNumber = async ()=>{
+  tableOrders.value = await orders.getOrdersByOrderNumber(orderNumberSearchValue.value);
+}
+
+const getOrdersByDate = async (date: Date)=>{
+  if(date===null || date===undefined){
+    tableOrders.value = await orders.getOrdersByDate(selectedDate.value);
+    return;
+  }
+  selectedDate.value = date;
+  orders.orders = await orders.getOrdersByDate(date);
+  tableOrders.value = orders.orders;
 }
 </script>
 <template>
   <div class="w-full h-screen p-4 bg-gray-300">
     <div class="bg-white rounded-lg shadow-lg h-full overflow-hidden">
-      <div class="p-4 border-b border-gray-200 flex flex-row items-center gap-4 mx-6">
-        <div class="w-80">
+      <div class="p-4 border-b border-gray-200 flex flex-row items-center justify-between gap-4 mx-6">
+        <div class="flex flex-row gap-8">
           <DateRangeSelectorComponent @dateUpdate="getOrdersByDate"/>
-        </div>
-        <div class="pr-3">
-          <el-button type="primary" @click="navigate">
-          <div class="flex flex-row gap-2">
-            <div>
-            <i class="bi bi-plus-lg"></i>
-          </div>
-            <div>
-              Add Order
+          <div>
+            <el-button type="primary" @click="navigate">
+            <div class="flex flex-row  gap-2">
+              <div>
+                <i class="bi bi-plus-lg"></i>
+              </div>
+              <div>
+                Add Order
+              </div>
             </div>
+          </el-button>
           </div>
-        </el-button>
-        </div>
-        <div class="w-90 flex flex-row items-center gap-3 bg-blue-700 rounded-lg h-15 py-3 px-5">
-          <el-input v-model="orderSearchValue"/>
-          <el-button type="primary" @click="findAllByText">
-            <div class="flex flex-row gap-2">
-              <i class="bi bi-search"></i>
-              <div>All</div>
-            </div
-          ></el-button>
-        </div>
-        <div class="w-90 flex flex-row items-center gap-3 bg-blue-700 rounded-lg h-15 py-3 px-5">
-          <el-input v-model="orderSearchValueByNumber"/>
-          <el-button type="primary" @click="findAllByOrderNumber">
+          <div>
+            <el-button type="primary" @click="orderNumberSearchDialogVisible=true">
             <div class="flex flex-row gap-2">
               <i class="bi bi-search"></i>
               <div>Order number</div>
             </div>
           </el-button>
+          </div>
+        </div>
+        <div class="w-90 flex flex-row items-center gap-3">
+          <div>Search:</div>
+          <el-input v-model="orderSearchValue" @input="findAllByText"/>
         </div>
       </div>
       <div class="overflow-auto" style="height: calc(100% - 80px);">
@@ -257,9 +266,10 @@ const getOrdersByDate = async (dateRange: { from: Date, to: Date })=>{
           @deliveryCityValueChange="filterOrdersByDeliveryCity"
           @deliveryPostalCodeValueChange="filterOrdersByDeliveryPostalCode"
           @statusValueChange="filterOrdersByStatus"
-          @statusUpdate="getOrdersByDate(dateRange)"
+          @statusUpdate="getOrdersByDate"
         />
       </div>
     </div>
   </div>
+  <SearchOrderNumberDialog v-model:visibility="orderNumberSearchDialogVisible" @update:visibility="findByOrderNumber" @sendSearchValue="setValue"/>
 </template>

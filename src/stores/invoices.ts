@@ -26,5 +26,19 @@ export const useInvoices = defineStore("invoices",{
         });
       })
     },
+    async deleteInvoice(invoiceNumber: number){
+      const token = localStorage.getItem("token");
+       console.log(invoiceNumber);
+      await api.delete("/deleteInvoice",{
+        params:{
+          invoiceNumber: invoiceNumber
+        },
+        headers:{
+          'Authorization': token,
+        }
+      }).then((response)=>{
+        console.log(response);
+      })
+    }
   }
 })

@@ -32,96 +32,109 @@ export const useCarrierStore = defineStore('carrier', {
   actions: {
     async getViesData(): Promise<boolean> {
       const token = localStorage.getItem('token');
-      await api.post("/verifyCarrier", {
-        countryCode: this.country,
-        vatNumber: this.fiscalCode
-      },{
-        headers: {
-          'Authorization': token
-        }
-      }).then((response)=>{
-        if(response.data?.actionSucceed) {
+      try {
+        const response = await api.post("/verifyCarrier", {
+          countryCode: this.country,
+          vatNumber: this.fiscalCode
+        },{
+          headers: {
+            'Authorization': token
+          }
+        });
+        if(response.data.valid){
           this.address = response.data.address;
           this.fiscalName = response.data.name;
           return true;
         }
-        else return false;
-      }).catch((error)=>{
+        return false;
+      } catch(error){
         console.error("Error validating VAT number:", error);
         return false;
-      });
-      return false;
+      }
     },
     async createCarrier(){
       const token = localStorage.getItem("token");
-      await api.post("/addCarrier",{
-        carrier:{
-          fiscalCode: this.fiscalCode,
-        fiscalName: this.fiscalName,
-        orc: this.orc,
-        commercialName: this.commercialName,
-        country: this.country,
-        currency: this.currency,
-        capital: this.capital,
-        registered: this.registered,
-        postalCode: this.postalCode,
-        county: this.county,
-        address: this.address,
-        city: this.city,
-        swift: this.swift,
-        phoneNumber: this.phoneNumber,
-        bankName: this.bankName,
-        iban: this.iban,
-        vatPercentage: this.vatPercentage,
-        }
-      },{
-        headers:{
-          'Authorization':  token
-        }
-      }).then((response)=>{
+      try {
+        const response = await api.post("/addCarrier",{
+          carrier:{
+            fiscalCode: this.fiscalCode,
+          fiscalName: this.fiscalName,
+          orc: this.orc,
+          commercialName: this.commercialName,
+          country: this.country,
+          currency: this.currency,
+          capital: this.capital,
+          registered: this.registered,
+          postalCode: this.postalCode,
+          county: this.county,
+          address: this.address,
+          city: this.city,
+          swift: this.swift,
+          phoneNumber: this.phoneNumber,
+          bankName: this.bankName,
+          iban: this.iban,
+          vatPercentage: this.vatPercentage,
+          }
+        },{
+          headers:{
+            'Authorization':  token
+          }
+        });
         console.log(response.data.message);
-      })
+      } catch(error) {
+        console.error("Error creating carrier:", error);
+      }
     },
     async updateCarrier(){
       const token = localStorage.getItem("token");
-      await api.put("/updateCarrier",{
-        carrier: this
-      }, {
-        headers:{
-          'Authorization': token
-        }
-      }).then((response)=>{
+      try {
+        const response = await api.put("/updateCarrier",{
+          carrier: this
+        }, {
+          headers:{
+            'Authorization': token
+          }
+        });
         console.log(response);
-      })
+      } catch(error) {
+        console.error("Error updating carrier:", error);
+      }
     },
     async createCarrierContact(carrier: string){
       const token = localStorage.getItem('token');
       console.log(carrier);
-      await api.post("/addCarrierContact",{
-        contact:{
-          name: this.contact.name,
-          mobile: this.contact.phoneNumber,
-          email: this.contact.email
-        },
-        carrierName: carrier
-      },{
-        headers:{
-          'Authorization': token
-        }
-      });
+      try {
+        await api.post("/addCarrierContact",{
+          contact:{
+            name: this.contact.name,
+            mobile: this.contact.phoneNumber,
+            email: this.contact.email
+          },
+          carrierName: carrier
+        },{
+          headers:{
+            'Authorization': token
+          }
+        });
+      } catch(error) {
+        console.error("Error creating carrier contact:", error);
+      }
     },
     async getCarrierContacts(commercialName: string){
       const token = localStorage.getItem('token');
-      await api.get("/getCarrierContacts",{
-        params:{
-          carrierName: commercialName
-        },
-        headers:{
-          'Authorization': token
-        }
-      }).then((response)=>{
-          this.contacts = response.data.contacts
-      });
+      try {
+        const response = await api.get("/getCarrierContacts",{
+          params:{
+            carrierName: commercialName
+          },
+          headers:{
+            'Authorization': token
+          }
+        });
+        this.contacts = response.data.contacts;
+      } catch(error) {
+        console.error("Error fetching carrier contacts:", error);
+      }
     },
     resetCarrierFields(){
       this.fiscalCode = '';
@@ -167,6 +180,14 @@ export const useCarrierStore = defineStore('carrier', {
       this.bankName = carrier.bankName;
       this.iban = carrier.iban;
       this.vatPercentage = carrier.vatPercentage;
+    },
+    validateRequiredFields(): boolean {
+      return (
+        this.fiscalCode.trim() !== '' &&
+        this.fiscalName.trim() !== '' &&
+        this.country.trim() !== '' &&
+        this.address.trim() !== ''
+      );
     }
   },
 })

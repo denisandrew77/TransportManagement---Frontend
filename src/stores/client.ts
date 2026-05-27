@@ -30,69 +30,75 @@ export const useClient = defineStore('client', {
     contacts: [] as carrierContact[],
   }),
   actions: {
-    async getViesData():Promise<boolean> {
+    async getViesData(): Promise<boolean> {
       const token = localStorage.getItem('token');
-      await api.post("/verifyCarrier", {
-        countryCode: this.country,
-        vatNumber: this.fiscalCode
-      },{
-        headers: {
-          'Authorization': token
-        }
-      }).then((response)=>{
-        if(response.data?.actionSucceed) {
+      try {
+        const response = await api.post("/verifyCarrier", {
+          countryCode: this.country,
+          vatNumber: this.fiscalCode
+        },{
+          headers: {
+            'Authorization': token
+          }
+        });
+        if(response.data.valid){
           this.address = response.data.address;
           this.fiscalName = response.data.name;
           return true;
         }
-        else return false;
-      }).catch((error)=>{
+        return false;
+      } catch(error){
         console.error("Error validating VAT number:", error);
         return false;
-      });
-      return false;
+      }
     },
     async createClient(){
       const token = localStorage.getItem("token");
-      await api.post("/addClient",{
-        client:{
-          fiscalCode: this.fiscalCode,
-        fiscalName: this.fiscalName,
-        orc: this.orc,
-        commercialName: this.commercialName,
-        country: this.country,
-        currency: this.currency,
-        capital: this.capital,
-        registered: this.registered,
-        postalCode: this.postalCode,
-        county: this.county,
-        address: this.address,
-        city: this.city,
-        swift: this.swift,
-        phoneNumber: this.phoneNumber,
-        bankName: this.bankName,
-        iban: this.iban,
-        vatPercentage: this.vatPercentage,
-        }
-      },{
-        headers:{
-          'Authorization':  token
-        }
-      }).then((response)=>{
+      try {
+        const response = await api.post("/addClient",{
+          client:{
+            fiscalCode: this.fiscalCode,
+          fiscalName: this.fiscalName,
+          orc: this.orc,
+          commercialName: this.commercialName,
+          country: this.country,
+          currency: this.currency,
+          capital: this.capital,
+          registered: this.registered,
+          postalCode: this.postalCode,
+          county: this.county,
+          address: this.address,
+          city: this.city,
+          swift: this.swift,
+          phoneNumber: this.phoneNumber,
+          bankName: this.bankName,
+          iban: this.iban,
+          vatPercentage: this.vatPercentage,
+          }
+        },{
+          headers:{
+            'Authorization':  token
+          }
+        });
         console.log(response.data.message);
-      })
+      } catch(error) {
+        console.error("Error creating client:", error);
+      }
     },
     async updateClient(){
       const token = localStorage.getItem("token");
-      await api.put("/updateClient",{
-        client: this
-      }, {
-        headers:{
-          'Authorization': token
-        }
-      }).then((response)=>{
+      try {
+        const response = await api.put("/updateClient",{
+          client: this
+        }, {
+          headers:{
+            'Authorization': token
+          }
+        });
         console.log(response);
-      })
+      } catch(error) {
+        console.error("Error updating client:", error);
+      }
     },
     resetClientFields(){
       this.fiscalCode = '';
@@ -138,6 +144,14 @@ export const useClient = defineStore('client', {
       this.bankName = carrier.bankName;
       this.iban = carrier.iban;
       this.vatPercentage = carrier.vatPercentage;
+    },
+    validateRequiredFields(): boolean {
+      return (
+        this.fiscalCode.trim() !== '' &&
+        this.fiscalName.trim() !== '' &&
+        this.country.trim() !== '' &&
+        this.address.trim() !== ''
+      );
     }
   },
 })

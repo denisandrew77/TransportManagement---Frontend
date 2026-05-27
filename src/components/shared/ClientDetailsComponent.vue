@@ -70,7 +70,7 @@ const dialogVisibility = ref(false);
       </div>
     </div>
     <div class="bg-gray-200 p-2 flex flex-col">
-      <div class="flex flex-row gap-30">
+      <div class="flex flex-row gap-20">
         <IndexListComponent  class="mt-7"/>
         <div class="flex flex-col items-center">
           <MediumTitle :text="'Sender'" />

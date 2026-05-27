@@ -8,17 +8,17 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e:"plateValueChange", value: string): void
-  (e:"carrierValueChange", value: string): void
-  (e:"clientNumberValueChange", value: string): void
-  (e:"clientValueChange", value: string): void
-  (e:"loadingCountryValueChange", value: string): void
-  (e:"loadingPostalCodeValueChange", value: string): void
-  (e:"loadingCityValueChange", value: string): void
-  (e:"deliveryCountryValueChange", value: string): void
-  (e:"deliveryPostalCodeValueChange", value: string): void
-  (e:"deliveryCityValueChange", value: string): void
-  (e:"statusValueChange", value: string): void
+  (e:"plateValueChange", value: string, allEmpty: boolean): void
+  (e:"carrierValueChange", value: string, allEmpty: boolean): void
+  (e:"clientNumberValueChange", value: string, allEmpty: boolean): void
+  (e:"clientValueChange", value: string, allEmpty: boolean): void
+  (e:"loadingCountryValueChange", value: string, allEmpty: boolean): void
+  (e:"loadingPostalCodeValueChange", value: string, allEmpty: boolean): void
+  (e:"loadingCityValueChange", value: string, allEmpty: boolean): void
+  (e:"deliveryCountryValueChange", value: string, allEmpty: boolean): void
+  (e:"deliveryPostalCodeValueChange", value: string, allEmpty: boolean): void
+  (e:"deliveryCityValueChange", value: string, allEmpty: boolean): void
+  (e:"statusValueChange", value: string, allEmpty: boolean): void
   (e:"statusUpdate", value: void): void
 }>();
 
@@ -46,6 +46,22 @@ const closeAndGetOrders = ()=>{
   dialogVisible.value = false;
   emit("statusUpdate");
 }
+
+const areAllFieldsEmpty = (): boolean => {
+  return (
+    searchValues.value.plate === "" &&
+    searchValues.value.carrier === "" &&
+    searchValues.value.clientNumber === "" &&
+    searchValues.value.client === "" &&
+    searchValues.value.loading.country === "" &&
+    searchValues.value.loading.postalCode === "" &&
+    searchValues.value.loading.city === "" &&
+    searchValues.value.delivery.country === "" &&
+    searchValues.value.delivery.postalCode === "" &&
+    searchValues.value.delivery.city === "" &&
+    searchValues.value.status === ""
+  );
+};
 </script>
 <template>
   <div class="px-10 pt-4">
@@ -78,7 +94,7 @@ const closeAndGetOrders = ()=>{
           <div class="flex flex-col text-lg gap-2.5">
             <div>Plate</div>
               <div class="header-divider"></div>
-            <el-input v-model="searchValues.plate" @input="emit('plateValueChange',searchValues.plate)"/>
+            <el-input v-model="searchValues.plate" @input="emit('plateValueChange', $event, areAllFieldsEmpty())"/>
           </div>
         </template>
         <template #default="{ row }">
@@ -93,13 +109,12 @@ const closeAndGetOrders = ()=>{
             </div>
       </template>
       </el-table-column>
-
       <el-table-column label="Carrier" min-width="180" align="center">
         <template #header>
           <div class="flex flex-col text-lg gap-2.5">
             <div>Carrier</div>
             <div class="header-divider"></div>
-            <el-input v-model="searchValues.carrier" @input="emit('carrierValueChange',searchValues.carrier)"/>
+            <el-input v-model="searchValues.carrier" @input="emit('carrierValueChange', $event, areAllFieldsEmpty())"/>
           </div>
         </template>
         <template #default="{ row }">
@@ -120,7 +135,7 @@ const closeAndGetOrders = ()=>{
           <div class="flex flex-col text-lg gap-2.5">
             <div>Client Number</div>
             <div class="header-divider"></div>
-            <el-input v-model="searchValues.clientNumber" @input="emit('clientNumberValueChange',searchValues.clientNumber)"/>
+            <el-input v-model="searchValues.clientNumber" @input="emit('clientNumberValueChange', $event, areAllFieldsEmpty())"/>
           </div>
         </template>
         <template #default="{row}">
@@ -135,7 +150,7 @@ const closeAndGetOrders = ()=>{
           <div class="flex flex-col text-lg gap-2.5">
             <div>Client</div>
             <div class="header-divider"></div>
-            <el-input v-model="searchValues.client" @input="emit('clientValueChange',searchValues.client)"/>
+            <el-input v-model="searchValues.client" @input="emit('clientValueChange', $event, areAllFieldsEmpty())"/>
           </div>
         </template>
         <template #default="{row}">
@@ -151,9 +166,9 @@ const closeAndGetOrders = ()=>{
             <div>Loading</div>
             <div class="header-divider"></div>
             <div class="flex flex-row gap-2">
-              <el-input v-model="searchValues.loading.country" @input="emit('loadingCountryValueChange',searchValues.loading.country)"/>
-              <el-input v-model="searchValues.loading.postalCode" @input="emit('loadingPostalCodeValueChange',searchValues.loading.postalCode)"/>
-              <el-input v-model="searchValues.loading.city" @input="emit('loadingCityValueChange',searchValues.loading.city)"/>
+              <el-input v-model="searchValues.loading.country" @input="emit('loadingCountryValueChange', $event, areAllFieldsEmpty())"/>
+              <el-input v-model="searchValues.loading.postalCode" @input="emit('loadingPostalCodeValueChange', $event, areAllFieldsEmpty())"/>
+              <el-input v-model="searchValues.loading.city" @input="emit('loadingCityValueChange', $event, areAllFieldsEmpty())"/>
             </div>
           </div>
         </template>
@@ -176,9 +191,9 @@ const closeAndGetOrders = ()=>{
             <div>Delivery</div>
             <div class="header-divider"></div>
             <div class="flex flex-row gap-2">
-              <el-input v-model="searchValues.delivery.country" @input="emit('deliveryCountryValueChange',searchValues.delivery.country)"/>
-              <el-input v-model="searchValues.delivery.postalCode" @input="emit('deliveryPostalCodeValueChange',searchValues.delivery.postalCode)"/>
-              <el-input v-model="searchValues.delivery.city" @input="emit('deliveryCityValueChange',searchValues.delivery.city)"/>
+              <el-input v-model="searchValues.delivery.country" @input="emit('deliveryCountryValueChange', $event, areAllFieldsEmpty())"/>
+              <el-input v-model="searchValues.delivery.postalCode" @input="emit('deliveryPostalCodeValueChange', $event, areAllFieldsEmpty())"/>
+              <el-input v-model="searchValues.delivery.city" @input="emit('deliveryCityValueChange', $event, areAllFieldsEmpty())"/>
             </div>
           </div>
         </template>
@@ -200,7 +215,7 @@ const closeAndGetOrders = ()=>{
           <div class="flex flex-col text-lg gap-2.5">
             <div>Status</div>
             <div class="header-divider"></div>
-            <el-input v-model="searchValues.status" @input="emit('statusValueChange',searchValues.status)"/>
+            <el-input v-model="searchValues.status" @input="emit('statusValueChange', $event, areAllFieldsEmpty())"/>
           </div>
         </template>
         <template #default="{row}">
